@@ -34,16 +34,16 @@
     return arr;
   }
 
-  // Flip 7: number cards 0–12 (min 2 copies each — higher duplicate/BUST risk), 7 modifier, 9 action
+  // Flip 7 deck: 94 cards. Many sources (e.g. flip7scorecard.com): 79 number, 6 modifier, 9 action.
+  // Number: 1×0, 1×1, 2×2, 3×3, …, 12×12. Modifier: x2, +2, +4, +6, +8, +10. Action: 3× each.
   var CARD = { NUMBER: 'number', MODIFIER: 'modifier', ACTION: 'action' };
   function buildDeck() {
     var deck = [];
     for (var n = 0; n <= 12; n++) {
-      var copies = n === 0 ? 2 : Math.max(2, n + 1);
+      var copies = n <= 1 ? 1 : n;
       for (var c = 0; c < copies; c++) deck.push({ type: CARD.NUMBER, value: n });
     }
-    var mods = [2, 4, 6, 8, 8, 10];
-    mods.forEach(function (m) { deck.push({ type: CARD.MODIFIER, value: '+' + m }); });
+    [2, 4, 6, 8, 10].forEach(function (m) { deck.push({ type: CARD.MODIFIER, value: '+' + m }); });
     deck.push({ type: CARD.MODIFIER, value: 'x2' });
     for (var a = 0; a < 3; a++) {
       deck.push({ type: CARD.ACTION, value: 'SecondChance' });
@@ -54,7 +54,7 @@
   }
 
   // --- Game ---
-  var MIN_PLAYERS = 3, MAX_PLAYERS = 6, DEFAULT_TARGET = 200;
+  var MIN_PLAYERS = 3, MAX_PLAYERS = 8, TARGET_TABLE_SIZE = 8, DEFAULT_TARGET = 200;
   var STATUS = { ACTIVE: 'ACTIVE', STOPPED: 'STOPPED', BUSTED: 'BUSTED' };
   var PHASE = { PLAYING: 'PLAYING', ROUND_END: 'ROUND_END', GAME_OVER: 'GAME_OVER' };
 
@@ -86,6 +86,16 @@
     return list;
   }
 
+  function fillToTableSize(players) {
+    var list = players.slice();
+    var botIndex = 0;
+    while (list.length < TARGET_TABLE_SIZE) {
+      list.push(createPlayer('bot-' + botIndex, 'Bot', true));
+      botIndex++;
+    }
+    return list;
+  }
+
   function createGame(humanCount, humanNames, seed, targetScore) {
     targetScore = targetScore || DEFAULT_TARGET;
     var rawSeed = (seed !== undefined && seed !== '') ? seed : Date.now();
@@ -95,7 +105,7 @@
       var name = (humanNames[i] && humanNames[i].trim()) ? humanNames[i].trim() : ('Player ' + (i + 1));
       players.push(createPlayer('human-' + i, name, false));
     }
-    var fullPlayers = ensureMinPlayers(players);
+    var fullPlayers = fillToTableSize(ensureMinPlayers(players));
     var shuffledNames = BOT_NICKNAMES.slice();
     for (var i = shuffledNames.length - 1; i > 0; i--) {
       var j = Math.floor(rng() * (i + 1));
@@ -120,7 +130,8 @@
       phase: PHASE.PLAYING,
       targetScore: targetScore,
       rng: rng,
-      log: [{ t: 0, msg: 'Game started.' }]
+      log: [{ t: 0, msg: 'Game started.' }],
+      pendingAction: null
     };
   }
 
@@ -131,6 +142,15 @@
       if (game.players[j].status === STATUS.ACTIVE) return game.players[j];
     }
     return null;
+  }
+
+  function getActivePlayers(game) {
+    return game.players.filter(function (p) { return p.status === STATUS.ACTIVE; });
+  }
+
+  function pickRandomActiveTarget(game) {
+    var active = getActivePlayers(game);
+    return active.length ? active[Math.floor(game.rng() * active.length)] : null;
   }
 
   function advanceTurn(game, actorIndex, logTime) {
@@ -203,6 +223,7 @@
   }
 
   function startNewRound(game, logTime) {
+    game.pendingAction = null;
     game.players.forEach(function (p) {
       p.roundSet = [];
       p.roundModifiers = [];
@@ -234,6 +255,59 @@
     });
     var flip7 = p.roundSet.length >= 7 ? 15 : 0;
     return numSum + add + flip7;
+  }
+
+  function applyFreezeToTarget(game, target, actorIndex, logTime) {
+    var actor = game.players[actorIndex];
+    game.log.push({ t: logTime, msg: actor.name + ' chooses to Freeze ' + target.name + '.' });
+    var sc = computeRoundScore(target);
+    target.totalScore += sc;
+    target.status = STATUS.STOPPED;
+    game.log.push({ t: logTime + 1, msg: target.name + ' Freeze — stopped. +' + sc + '. Total: ' + target.totalScore + '.' });
+    advanceTurn(game, actorIndex, logTime + 1);
+  }
+
+  function drawCardsForTarget(game, target, count, logTime) {
+    var t = logTime;
+    for (var i = 0; i < count && game.deck.length > 0 && target.status === STATUS.ACTIVE && game.phase === PHASE.PLAYING; i++) {
+      var r = drawOne(game, target, t);
+      t++;
+      if (r && r.bust) return t;
+      if (r && r.freeze) {
+        var sc = computeRoundScore(target);
+        target.totalScore += sc;
+        target.status = STATUS.STOPPED;
+        game.log.push({ t: t, msg: target.name + ' stopped (Freeze). +' + sc + '. Total: ' + target.totalScore + '.' });
+        return t;
+      }
+      if (r && r.flipThree) {
+        game.log.push({ t: t, msg: target.name + ' Flip Three — draws 3 cards.' });
+        t = drawCardsForTarget(game, target, 3, t);
+      }
+    }
+    return t;
+  }
+
+  function applyFlipThreeToTarget(game, target, actorIndex, logTime) {
+    var actor = game.players[actorIndex];
+    game.log.push({ t: logTime, msg: actor.name + ' chooses ' + target.name + ' to draw 3 cards (Flip Three!).' });
+    drawCardsForTarget(game, target, 3, logTime + 1);
+    advanceTurn(game, actorIndex, game.log.length);
+  }
+
+  function pickActionTarget(game, targetPlayerId) {
+    var pa = game.pendingAction;
+    if (!pa) return false;
+    var target = game.players.find(function (p) { return p.id === targetPlayerId; });
+    if (!target || target.status !== STATUS.ACTIVE) return false;
+    var logTime = game.log.length;
+    if (pa.type === 'Freeze') {
+      applyFreezeToTarget(game, target, pa.actorIndex, logTime);
+    } else if (pa.type === 'FlipThree') {
+      applyFlipThreeToTarget(game, target, pa.actorIndex, logTime);
+    }
+    game.pendingAction = null;
+    return true;
   }
 
   function drawOne(game, player, logTime) {
@@ -308,26 +382,26 @@
       return { success: true, card: result.card, bust: true };
     }
     if (result.freeze) {
-      var bankScore = computeRoundScore(player);
-      player.totalScore += bankScore;
-      player.status = STATUS.STOPPED;
-      game.log.push({ t: logTime + 1, msg: player.name + ' stopped (Freeze). +' + bankScore + '. Total: ' + player.totalScore + '.' });
-      advanceTurn(game, actorIndex, logTime + 1);
+      if (player.isBot) {
+        var freezeTarget = pickRandomActiveTarget(game);
+        if (freezeTarget) applyFreezeToTarget(game, freezeTarget, actorIndex, logTime + 1);
+        else advanceTurn(game, actorIndex, logTime + 1);
+      } else {
+        game.pendingAction = { type: 'Freeze', actorIndex: actorIndex };
+        return { success: true, card: result.card, needTarget: true };
+      }
       return { success: true, card: result.card };
     }
     if (result.flipThree) {
-      for (var i = 0; i < 2 && game.deck.length > 0 && player.status === STATUS.ACTIVE && game.phase === PHASE.PLAYING; i++) {
-        var r = drawOne(game, player, logTime + 1 + i);
-        if (r && r.bust) break;
-        if (r && r.freeze) {
-          var sc = computeRoundScore(player);
-          player.totalScore += sc;
-          player.status = STATUS.STOPPED;
-          game.log.push({ t: logTime + 2 + i, msg: player.name + ' stopped (Freeze). +' + sc + '. Total: ' + player.totalScore + '.' });
-          advanceTurn(game, actorIndex, logTime + 2 + i);
-          return { success: true, card: result.card };
-        }
+      if (player.isBot) {
+        var flipTarget = pickRandomActiveTarget(game);
+        if (flipTarget) applyFlipThreeToTarget(game, flipTarget, actorIndex, logTime + 1);
+        else advanceTurn(game, actorIndex, logTime + 1);
+      } else {
+        game.pendingAction = { type: 'FlipThree', actorIndex: actorIndex };
+        return { success: true, card: result.card, needTarget: true };
       }
+      return { success: true, card: result.card };
     }
     if (game.phase === PHASE.ROUND_END) {
       advanceTurn(game, actorIndex, logTime + 2);
@@ -477,103 +551,103 @@
     var totalScoreEl = document.getElementById('totalScoreDisplay');
 
     if (totalScoreEl) {
-      totalScoreEl.innerHTML = game.players.map(function (p) {
-        return '<span class="total-score-row">' + escapeHtml(p.name) + ': <strong>' + p.totalScore + '</strong></span>';
-      }).join('');
+      totalScoreEl.classList.toggle('scoreboard--expanded', scoreboardExpanded);
+      totalScoreEl.innerHTML = '';
+      game.players.forEach(function (p, i) {
+        var name = (p.name && p.name.trim()) ? p.name.trim() : ('Player ' + (i + 1));
+        var initial = name.charAt(0).toUpperCase() || ('P' + (i + 1));
+        var row = document.createElement('div');
+        row.className = 'scoreboard-player';
+        var avatar = document.createElement('div');
+        avatar.className = 'scoreboard-avatar';
+        avatar.setAttribute('aria-label', name);
+        avatar.title = name + ': ' + p.totalScore;
+        avatar.textContent = initial;
+        row.appendChild(avatar);
+        var detail = document.createElement('div');
+        detail.className = 'scoreboard-player-detail';
+        var header = document.createElement('div');
+        header.className = 'total-score-row';
+        header.innerHTML = escapeHtml(name) + ': <strong>' + p.totalScore + '</strong>';
+        detail.appendChild(header);
+        var cardsRow = document.createElement('div');
+        cardsRow.className = 'total-score-cards';
+        p.roundSet.forEach(function (v, idx) {
+          var c = document.createElement('div');
+          c.className = 'card-face card-number';
+          if (p.status === STATUS.BUSTED && idx === p.roundSet.length - 1) c.classList.add('card-duplicate');
+          c.textContent = v;
+          cardsRow.appendChild(c);
+        });
+        (p.roundModifiers || []).forEach(function (m) {
+          var c = document.createElement('div');
+          c.className = 'card-face card-modifier';
+          c.textContent = m;
+          cardsRow.appendChild(c);
+        });
+        if (p.hasSecondChance) {
+          var sc = document.createElement('div');
+          sc.className = 'card-face card-action';
+          sc.textContent = '2nd';
+          sc.title = 'Second Chance';
+          cardsRow.appendChild(sc);
+        }
+        detail.appendChild(cardsRow);
+        row.appendChild(detail);
+        totalScoreEl.appendChild(row);
+      });
+      if (!totalScoreEl._scoreboardClick) {
+        totalScoreEl._scoreboardClick = true;
+        totalScoreEl.addEventListener('click', function () {
+          scoreboardExpanded = !scoreboardExpanded;
+          totalScoreEl.classList.toggle('scoreboard--expanded', scoreboardExpanded);
+        });
+      }
     }
     if (deckCount) deckCount.textContent = game.deck.length;
 
+    var pending = game.pendingAction;
     var canDraw = currentPlayer && currentPlayer.status === STATUS.ACTIVE && game.phase === 'PLAYING' && game.deck.length > 0;
-    var canDrawHuman = canDraw && !currentPlayer.isBot;
+    var canDrawHuman = canDraw && !currentPlayer.isBot && !pending;
     if (deckStack) {
       deckStack.classList.toggle('disabled', !canDrawHuman);
       deckStack.title = canDrawHuman ? 'Tap to draw a card' : (currentPlayer && currentPlayer.isBot ? 'Turn: ' + currentPlayer.name + '…' : '');
     }
     if (btnDraw) btnDraw.disabled = !canDrawHuman;
-    if (btnStop) btnStop.disabled = !currentPlayer || currentPlayer.isBot || currentPlayer.status !== STATUS.ACTIVE;
+    if (btnStop) btnStop.disabled = !currentPlayer || currentPlayer.isBot || currentPlayer.status !== STATUS.ACTIVE || !!pending;
 
-    if (currentStatus) {
+    var targetPickerWrap = document.getElementById('targetPickerWrap');
+    if (targetPickerWrap) {
+      if (pending) {
+        var activeList = getActivePlayers(game);
+        var msg = pending.type === 'Freeze' ? 'Choose who to Freeze:' : 'Who draws 3 cards (Flip Three)?';
+        if (currentStatus) currentStatus.textContent = msg;
+        targetPickerWrap.innerHTML = '';
+        targetPickerWrap.classList.remove('hidden');
+        activeList.forEach(function (p) {
+          var btn = document.createElement('button');
+          btn.type = 'button';
+          btn.className = 'target-picker-btn';
+          btn.setAttribute('data-target-id', p.id);
+          btn.textContent = p.name;
+          targetPickerWrap.appendChild(btn);
+        });
+      } else {
+        targetPickerWrap.classList.add('hidden');
+        targetPickerWrap.innerHTML = '';
+        if (currentStatus) {
+          if (!currentPlayer) currentStatus.textContent = 'Round over or waiting.';
+          else if (currentPlayer.isBot) currentStatus.textContent = 'Turn: ' + currentPlayer.name;
+          else currentStatus.textContent = 'Your turn — Draw or STOP';
+        }
+      }
+    } else if (currentStatus) {
       if (!currentPlayer) currentStatus.textContent = 'Round over or waiting.';
       else if (currentPlayer.isBot) currentStatus.textContent = 'Turn: ' + currentPlayer.name;
       else currentStatus.textContent = 'Your turn — Draw or STOP';
     }
 
-    // Human is always at bottom of table; table doesn't rotate on turn change
-    edges.innerHTML = '';
-    var namesWrap = document.createElement('div');
-    namesWrap.className = 'table-edges-names';
-    var cardsWrap = document.createElement('div');
-    cardsWrap.className = 'table-edges-cards';
-    var n = game.players.length;
-    var rOuter = 48;
-    var rInner = 32;
-    var humanIdx = game.players.findIndex(function (p) { return !p.isBot; });
-    if (humanIdx < 0) humanIdx = 0;
-    game.players.forEach(function (p, idx) {
-      var relIdx = (idx - humanIdx + n) % n;
-      var angleDeg = 90 - relIdx * (360 / n);
-      var angleRad = angleDeg * Math.PI / 180;
-      var cxOuter = 50 + rOuter * Math.cos(angleRad);
-      var cyOuter = 50 + rOuter * Math.sin(angleRad);
-      var cxInner = 50 + rInner * Math.cos(angleRad);
-      var cyInner = 50 + rInner * Math.sin(angleRad);
-
-      var edge = document.createElement('div');
-      edge.className = 'player-edge player-edge-outer';
-      edge.dataset.playerId = p.id;
-      edge.style.left = cxOuter + '%';
-      edge.style.top = cyOuter + '%';
-      if (currentPlayer && p.id === currentPlayer.id) edge.classList.add('active');
-      if (p.status === STATUS.STOPPED) edge.classList.add('stopped');
-      if (p.status === STATUS.BUSTED) edge.classList.add('busted');
-      var inner = document.createElement('div');
-      inner.className = 'player-edge-inner';
-      var roundScore = p.roundSet.length || p.roundModifiers.length ? computeRoundScore(p) : 0;
-      inner.innerHTML =
-        '<span class="edge-name">' + escapeHtml(p.name) + '</span>' +
-        '<span class="edge-scores">' +
-        '<span class="edge-score">' + p.totalScore + '</span>' +
-        (roundScore ? '<span class="edge-sum">+' + roundScore + '</span>' : '') +
-        '</span>';
-      edge.appendChild(inner);
-      namesWrap.appendChild(edge);
-
-      var cardsBox = document.createElement('div');
-      cardsBox.className = 'player-cards-inner';
-      cardsBox.dataset.playerId = p.id;
-      cardsBox.style.left = cxInner + '%';
-      cardsBox.style.top = cyInner + '%';
-      if (currentPlayer && p.id === currentPlayer.id) cardsBox.classList.add('active');
-      if (p.status === STATUS.STOPPED) cardsBox.classList.add('stopped');
-      if (p.status === STATUS.BUSTED) cardsBox.classList.add('busted');
-      var cardsRow = document.createElement('div');
-      cardsRow.className = 'player-edge-cards';
-      cardsRow.setAttribute('aria-label', 'Cards for ' + p.name);
-      p.roundSet.forEach(function (v, i) {
-        var c = document.createElement('div');
-        c.className = 'card-face card-number';
-        if (p.status === STATUS.BUSTED && i === p.roundSet.length - 1) c.classList.add('card-duplicate');
-        c.textContent = v;
-        cardsRow.appendChild(c);
-      });
-      (p.roundModifiers || []).forEach(function (m) {
-        var c = document.createElement('div');
-        c.className = 'card-face card-modifier';
-        c.textContent = m;
-        cardsRow.appendChild(c);
-      });
-      if (p.hasSecondChance) {
-        var sc = document.createElement('div');
-        sc.className = 'card-face card-action';
-        sc.textContent = '2nd';
-        sc.title = 'Second Chance';
-        cardsRow.appendChild(sc);
-      }
-      cardsBox.appendChild(cardsRow);
-      cardsWrap.appendChild(cardsBox);
-    });
-    edges.appendChild(namesWrap);
-    edges.appendChild(cardsWrap);
+    if (edges) edges.innerHTML = '';
 
     var human = game.players.find(function (p) { return !p.isBot; });
     var areaCards = document.getElementById('playerAreaCards');
@@ -611,6 +685,7 @@
 
   // --- Main ---
   var game = null;
+  var scoreboardExpanded = false;
 
   function getHumanCount() {
     return 1;
@@ -674,6 +749,10 @@
     if (game.deck.length === 0) return;
     var result = doDraw(game, current);
     if (!result.success) return;
+    if (result.needTarget) {
+      render(game, getCurrentPlayer(game));
+      return;
+    }
     if (game.phase === PHASE.ROUND_END) tickRoundEnd(game);
     render(game, getCurrentPlayer(game));
     runTurn();
@@ -698,6 +777,7 @@
   }
 
   function init() {
+    showSetup();
     var btnStart = document.getElementById('btnStart');
     if (!btnStart) return;
     btnStart.addEventListener('click', onStart);
@@ -707,6 +787,18 @@
     if (deckStack) deckStack.addEventListener('click', onDeckClick);
     if (btnDraw) btnDraw.addEventListener('click', onDraw);
     if (btnStop) btnStop.addEventListener('click', onStop);
+    var targetPickerWrap = document.getElementById('targetPickerWrap');
+    if (targetPickerWrap) {
+      targetPickerWrap.addEventListener('click', function (e) {
+        var btn = e.target.closest('button[data-target-id]');
+        if (!btn || !game) return;
+        var id = btn.getAttribute('data-target-id');
+        if (pickActionTarget(game, id)) {
+          render(game, getCurrentPlayer(game));
+          runTurn();
+        }
+      });
+    }
     var btnNewGame = document.getElementById('btnNewGame');
     var btnNewGameFromOver = document.getElementById('btnNewGameFromOver');
     if (btnNewGame) btnNewGame.addEventListener('click', onNewGame);

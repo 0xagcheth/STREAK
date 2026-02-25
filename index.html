@@ -3,50 +3,53 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-  <title>Flip7 — Push Your Luck</title>
-  <link rel="stylesheet" href="styles.css">
+  <title>STREAK — Push Your Luck</title>
+  <link rel="stylesheet" href="styles.css?v=4">
 </head>
 <body>
   <div id="app">
     <header>
-      <h1>Flip7</h1>
-      <p class="subtitle">First to 200 points · 1 player per device</p>
+      <h1>STREAK</h1>
+      <p class="subtitle">First to 200 points</p>
     </header>
 
     <section id="setup" class="panel">
-      <h2>Settings</h2>
       <div class="setup-row">
-        <label for="humanName">Your name:</label>
         <input type="text" id="humanName" placeholder="Player 1">
       </div>
       <button id="btnStart" type="button">Start game</button>
     </section>
 
     <section id="game" class="panel hidden">
-      <div id="totalScoreDisplay" class="total-score-display" aria-live="polite"></div>
-      <div id="gameTable">
-        <div class="table-wrapper">
-          <div class="table-surface">
-            <div class="table-edges" id="playersEdges"></div>
-            <div class="table-center">
-              <div class="deck-wrap">
-                <div id="deckStack" class="deck-stack" title="Tap to draw a card">
-                  <span class="deck-count" id="deckCount">95</span>
-                </div>
-                <div class="deck-label">Deck</div>
-              </div>
+      <div class="game-layout">
+
+        <aside id="totalScoreDisplay" class="scoreboard" aria-live="polite"></aside>
+
+        <div class="deck-panel">
+          <div class="deck-wrap">
+            <div id="deckStack" class="deck-stack" title="Tap to draw a card">
+              <span class="deck-count" id="deckCount">94</span>
             </div>
+            <div class="deck-label">Deck</div>
           </div>
+          <span id="currentStatus" class="game-status" aria-live="polite"></span>
+          <div id="targetPickerWrap" class="target-picker-wrap hidden" aria-live="polite"></div>
         </div>
-      </div>
-      <div class="bottom-actions">
-        <span id="currentStatus" class="game-status" aria-live="polite"></span>
-        <div class="row">
-          <button id="btnDraw" type="button">Draw</button>
-          <button id="btnStop" type="button">STOP</button>
+
+        <div class="hand-panel">
+          <div class="player-area-cards" id="playerAreaCards"></div>
+          <div class="player-area-sum" id="playerAreaSum"></div>
         </div>
+
+        <div class="actions-panel">
+          <div class="actions-row">
+            <button id="btnDraw" type="button">Draw</button>
+            <button id="btnStop" type="button">STOP</button>
+          </div>
+          <button id="btnNewGame" type="button" class="secondary newgame-wide">New game</button>
+        </div>
+
       </div>
-      <button id="btnNewGame" type="button" class="secondary">New game</button>
     </section>
 
     <section id="gameOver" class="panel hidden">
@@ -55,6 +58,6 @@
     </section>
   </div>
 
-  <script src="app.js"></script>
+  <script src="app.js?v=4"></script>
 </body>
 </html>
