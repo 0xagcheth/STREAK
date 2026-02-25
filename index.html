@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Flip7 — Push Your Luck</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div id="app">
+    <header>
+      <h1>Flip7</h1>
+      <p class="subtitle">До 200 очков · 1 игрок на устройство</p>
+    </header>
+
+    <section id="setup" class="panel">
+      <h2>Настройки</h2>
+      <div class="setup-row">
+        <label for="humanName">Ваше имя:</label>
+        <input type="text" id="humanName" placeholder="Игрок 1">
+      </div>
+      <button id="btnStart" type="button">Начать игру</button>
+    </section>
+
+    <section id="game" class="panel hidden">
+      <div id="totalScoreDisplay" class="total-score-display" aria-live="polite"></div>
+      <div id="gameTable">
+        <div class="table-wrapper">
+          <div class="table-surface">
+            <div class="table-edges" id="playersEdges"></div>
+            <div class="table-center">
+              <div class="deck-wrap">
+                <div id="deckStack" class="deck-stack" title="Нажми, чтобы вытянуть карту">
+                  <span class="deck-count" id="deckCount">95</span>
+                </div>
+                <div class="deck-label">Колода</div>
+              </div>
+            </div>
+          </div>
+          <div class="game-actions">
+            <span id="currentStatus" class="game-status"></span>
+            <button id="btnDraw" type="button">Взять</button>
+            <button id="btnStop" type="button">STOP</button>
+          </div>
+        </div>
+      </div>
+      <button id="btnNewGame" type="button" class="secondary">Новая игра</button>
+    </section>
+
+    <section id="gameOver" class="panel hidden">
+      <h2 id="winnerTitle"></h2>
+      <button id="btnNewGameFromOver" type="button">Новая игра</button>
+    </section>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>

@@ -1,0 +1,644 @@
+/* ============================================
+   Flip7 — Release UI
+   Минимализм, чёткая иерархия, один акцент
+   ============================================ */
+
+:root {
+  /* Фон и поверхности */
+  --bg: #0c0c0e;
+  --bg-elevated: #141418;
+  --bg-overlay: #1a1a1f;
+  --surface: #16161a;
+  --surface-hover: #1c1c22;
+
+  /* Границы */
+  --border: rgba(255, 255, 255, 0.08);
+  --border-focus: rgba(255, 255, 255, 0.18);
+
+  /* Текст */
+  --text: #fafafa;
+  --text-secondary: rgba(250, 250, 250, 0.7);
+  --text-tertiary: rgba(250, 250, 250, 0.5);
+
+  /* Один акцент */
+  --primary: #3b82f6;
+  --primary-hover: #2563eb;
+  --primary-muted: rgba(59, 130, 246, 0.15);
+
+  /* Семантика */
+  --success: #22c55e;
+  --success-bg: rgba(34, 197, 94, 0.12);
+  --danger: #ef4444;
+  --danger-bg: rgba(239, 68, 68, 0.12);
+
+  /* Размеры */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
+  --space-8: 32px;
+  --radius-sm: 8px;
+  --radius: 12px;
+  --radius-lg: 16px;
+  --radius-xl: 20px;
+
+  --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --ease: cubic-bezier(0.25, 0.1, 0.25, 1);
+  --duration: 0.2s;
+}
+
+* {
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+}
+
+html {
+  font-size: 16px;
+  -webkit-font-smoothing: antialiased;
+}
+
+html, body {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  font-family: var(--font-sans);
+  color: var(--text);
+  background: var(--bg);
+  line-height: 1.5;
+  padding: var(--space-5);
+  min-height: 100%;
+}
+
+#app {
+  max-width: 400px;
+  margin: 0 auto;
+}
+
+/* ----- Header ----- */
+header {
+  text-align: center;
+  margin-bottom: var(--space-6);
+  padding-top: var(--space-2);
+}
+
+header h1 {
+  margin: 0;
+  font-size: 1.75rem;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  color: var(--text);
+}
+
+.subtitle {
+  margin: var(--space-1) 0 0;
+  font-size: 0.8125rem;
+  color: var(--text-tertiary);
+}
+
+/* ----- Panels ----- */
+.panel {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: var(--space-5);
+  margin-bottom: var(--space-4);
+}
+
+.panel.hidden,
+.load-hint.hidden {
+  display: none;
+}
+
+.panel h2 {
+  margin: 0 0 var(--space-4);
+  font-size: 0.6875rem;
+  font-weight: 600;
+  color: var(--text-tertiary);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.load-hint {
+  background: var(--primary);
+  color: #fff;
+  padding: var(--space-3) var(--space-4);
+  border-radius: var(--radius);
+  margin-bottom: var(--space-3);
+  font-size: 0.875rem;
+}
+
+.load-hint code {
+  background: rgba(0, 0, 0, 0.2);
+  padding: 2px 6px;
+  border-radius: var(--radius-sm);
+}
+
+/* ----- Form ----- */
+.setup-row {
+  margin-bottom: var(--space-4);
+}
+
+.setup-row label {
+  display: block;
+  margin-bottom: var(--space-2);
+  font-size: 0.8125rem;
+  color: var(--text-secondary);
+}
+
+.setup-row input {
+  width: 100%;
+  padding: var(--space-3) var(--space-4);
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  background: var(--bg);
+  color: var(--text);
+  font-size: 1rem;
+  font-family: inherit;
+  outline: none;
+  transition: border-color var(--duration) var(--ease), box-shadow var(--duration) var(--ease);
+}
+
+.setup-row input::placeholder {
+  color: var(--text-tertiary);
+}
+
+.setup-row input:hover {
+  border-color: var(--border-focus);
+}
+
+.setup-row input:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px var(--primary-muted);
+}
+
+.setup-hint {
+  margin: var(--space-1) 0 var(--space-3);
+  font-size: 0.75rem;
+  color: var(--text-tertiary);
+}
+
+#humanNames .name-row { margin-bottom: var(--space-3); }
+#humanNames .name-row label { font-size: 0.75rem; color: var(--text-secondary); }
+
+/* ----- Buttons ----- */
+button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  padding: var(--space-3) var(--space-4);
+  border: none;
+  border-radius: var(--radius);
+  font-size: 0.9375rem;
+  font-weight: 500;
+  font-family: inherit;
+  cursor: pointer;
+  transition: background var(--duration) var(--ease), opacity var(--duration) var(--ease), transform var(--duration) var(--ease);
+}
+
+button:active {
+  transform: scale(0.98);
+}
+
+button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* Primary */
+#btnStart,
+#btnDraw,
+#btnNewGame,
+#btnNewGameFromOver {
+  background: var(--primary);
+  color: #fff;
+}
+
+#btnStart:hover:not(:disabled),
+#btnDraw:hover:not(:disabled),
+#btnNewGame:hover:not(:disabled),
+#btnNewGameFromOver:hover:not(:disabled) {
+  background: var(--primary-hover);
+}
+
+/* Success (STOP) */
+#btnStop {
+  background: var(--success);
+  color: #fff;
+}
+
+#btnStop:hover:not(:disabled) {
+  background: #16a34a;
+}
+
+/* Secondary */
+button.secondary {
+  background: transparent;
+  color: var(--text-secondary);
+  border: 1px solid var(--border);
+  margin-top: var(--space-3);
+}
+
+button.secondary:hover:not(:disabled) {
+  background: var(--surface-hover);
+  color: var(--text);
+}
+
+/* ----- Game screen ----- */
+#game.panel {
+  position: relative;
+  padding-top: var(--space-6);
+}
+
+.total-score-display {
+  position: absolute;
+  top: var(--space-4);
+  left: var(--space-4);
+  z-index: 5;
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+  font-variant-numeric: tabular-nums;
+  line-height: 1.5;
+}
+
+.total-score-display .total-score-row strong {
+  color: var(--primary);
+  font-weight: 600;
+  margin-left: var(--space-1);
+}
+
+/* ----- Table ----- */
+#gameTable {
+  margin-bottom: var(--space-5);
+}
+
+.table-wrapper {
+  position: relative;
+  width: 100%;
+  max-width: 300px;
+  margin: 0 auto;
+}
+
+.table-surface {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  padding: var(--space-3);
+  background: #0d2818;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+/* Player chips on table edge */
+.table-edges-names,
+.table-edges-cards {
+  position: absolute;
+  inset: 0;
+}
+
+.table-edges {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.table-edges .player-edge,
+.table-edges .player-cards-inner {
+  pointer-events: auto;
+}
+
+.player-edge.player-edge-outer {
+  position: absolute;
+  width: 72px;
+  min-width: 72px;
+  transform: translate(-50%, -50%);
+  z-index: 2;
+}
+
+.player-edge-inner {
+  padding: var(--space-2) var(--space-3);
+  background: var(--bg-overlay);
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border);
+  text-align: center;
+  font-size: 0.6875rem;
+  line-height: 1.3;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  min-width: 0;
+}
+
+.player-edge.active .player-edge-inner {
+  border-color: var(--primary);
+  background: var(--primary-muted);
+}
+
+.edge-name {
+  font-weight: 600;
+  color: var(--text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.edge-scores {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+}
+
+.edge-score {
+  color: var(--primary);
+  font-weight: 600;
+  font-size: 0.75rem;
+}
+
+.edge-sum {
+  color: var(--success);
+  font-weight: 600;
+  font-size: 0.75rem;
+}
+
+.player-cards-inner {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  z-index: 1;
+}
+
+.player-edge-cards {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--space-1);
+  min-height: 32px;
+  max-width: 100px;
+}
+
+.player-edge.stopped .player-edge-inner,
+.player-cards-inner.stopped {
+  opacity: 0.6;
+}
+
+.player-edge.busted .player-edge-inner,
+.player-cards-inner.busted {
+  opacity: 0.5;
+}
+
+.card-face.card-duplicate {
+  border: 1px solid var(--danger);
+  background: var(--danger-bg);
+}
+
+.player-cards-inner .card-face {
+  width: 24px;
+  height: 32px;
+  font-size: 0.625rem;
+  border-radius: var(--radius-sm);
+}
+
+.player-cards-inner .card-modifier {
+  background: var(--primary);
+  color: #fff;
+  font-size: 0.5rem;
+  font-weight: 700;
+}
+
+.player-cards-inner .card-action {
+  background: #eab308;
+  color: #1c1917;
+  font-size: 0.5rem;
+  font-weight: 700;
+}
+
+/* ----- Deck ----- */
+.table-center {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.deck-wrap {
+  position: relative;
+  width: 72px;
+  height: 88px;
+}
+
+.deck-stack {
+  position: absolute;
+  left: 50%;
+  top: 0;
+  width: 52px;
+  height: 72px;
+  transform: translateX(-50%);
+  border-radius: var(--radius);
+  cursor: pointer;
+  background: var(--primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform var(--duration) var(--ease), opacity var(--duration) var(--ease);
+}
+
+.deck-stack:hover {
+  transform: translateX(-50%) translateY(-2px);
+}
+
+.deck-stack:active {
+  transform: translateX(-50%) scale(0.98);
+}
+
+.deck-stack.disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.deck-count {
+  font-size: 0.875rem;
+  font-weight: 700;
+  color: #fff;
+}
+
+.deck-label {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  top: 76px;
+  font-size: 0.625rem;
+  color: var(--text-tertiary);
+}
+
+/* ----- Player area (below table) ----- */
+.player-area {
+  margin-top: var(--space-3);
+  padding: var(--space-3) var(--space-4);
+  background: var(--bg);
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+}
+
+.player-area-label {
+  font-size: 0.625rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-tertiary);
+  margin-bottom: var(--space-2);
+}
+
+.player-area-cards {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  justify-content: center;
+  min-height: 44px;
+  align-items: center;
+}
+
+.player-area-cards .card-face {
+  width: 40px;
+  height: 56px;
+  font-size: 1rem;
+  border-radius: var(--radius-sm);
+}
+
+.player-area-cards .card-modifier {
+  background: var(--primary);
+  color: #fff;
+  font-size: 0.625rem;
+  font-weight: 700;
+}
+
+.player-area-cards .card-action {
+  background: #eab308;
+  color: #1c1917;
+  font-size: 0.5625rem;
+  font-weight: 700;
+}
+
+.player-area-sum {
+  margin-top: var(--space-2);
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: var(--success);
+  text-align: center;
+}
+
+/* ----- Game actions ----- */
+.table-wrapper > .game-actions {
+  margin-top: var(--space-4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-3);
+  flex-wrap: wrap;
+}
+
+.game-status {
+  width: 100%;
+  text-align: center;
+  font-size: 0.8125rem;
+  color: var(--text-secondary);
+  margin-bottom: var(--space-2);
+}
+
+.game-actions button {
+  width: auto;
+  min-width: 100px;
+}
+
+/* ----- Cards (global) ----- */
+.card-face {
+  width: 52px;
+  height: 72px;
+  border-radius: var(--radius);
+  background: #fff;
+  color: #0c0c0e;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 1.25rem;
+  border: 1px solid var(--border);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+}
+
+.card-face.small {
+  width: 28px;
+  height: 40px;
+  font-size: 0.75rem;
+  border-radius: var(--radius-sm);
+}
+
+/* ----- Log ----- */
+#logPanel h2 { margin-bottom: var(--space-3); }
+
+#log {
+  max-height: 140px;
+  overflow: auto;
+  font-size: 0.8125rem;
+  color: var(--text-secondary);
+  line-height: 1.5;
+}
+
+#log .entry { margin-bottom: var(--space-2); }
+
+/* ----- Game over ----- */
+#gameOver {
+  text-align: center;
+}
+
+#gameOver h2 {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: var(--text);
+  margin: 0 0 var(--space-5);
+}
+
+#gameOver button {
+  max-width: 200px;
+  margin: 0 auto;
+}
+
+/* ----- Responsive ----- */
+@media (max-width: 380px) {
+  body { padding: var(--space-4); }
+
+  .table-wrapper { max-width: 260px; }
+  .table-surface { padding: var(--space-2); }
+
+  .player-edge.player-edge-outer {
+    width: 64px;
+    min-width: 64px;
+  }
+
+  .player-edge-inner {
+    padding: var(--space-1) var(--space-2);
+    font-size: 0.625rem;
+  }
+
+  .player-cards-inner .card-face {
+    width: 20px;
+    height: 28px;
+    font-size: 0.5rem;
+  }
+
+  .player-area-cards .card-face {
+    width: 36px;
+    height: 50px;
+    font-size: 0.875rem;
+  }
+
+  .deck-stack {
+    width: 46px;
+    height: 64px;
+  }
+
+  .deck-wrap { width: 60px; height: 76px; }
+}
