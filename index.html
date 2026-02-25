@@ -2,7 +2,7 @@
 <html lang="ru">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <title>Flip7 — Push Your Luck</title>
   <link rel="stylesheet" href="styles.css">
 </head>
@@ -37,11 +37,13 @@
               </div>
             </div>
           </div>
-          <div class="game-actions">
-            <span id="currentStatus" class="game-status"></span>
-            <button id="btnDraw" type="button">Взять</button>
-            <button id="btnStop" type="button">STOP</button>
-          </div>
+        </div>
+      </div>
+      <div class="bottom-actions">
+        <span id="currentStatus" class="game-status" aria-live="polite"></span>
+        <div class="row">
+          <button id="btnDraw" type="button">Взять</button>
+          <button id="btnStop" type="button">STOP</button>
         </div>
       </div>
       <button id="btnNewGame" type="button" class="secondary">Новая игра</button>
