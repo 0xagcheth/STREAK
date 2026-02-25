@@ -339,6 +339,8 @@ button.secondary:hover:not(:disabled) {
 .scoreboard:not(.scoreboard--expanded) .scoreboard-player-detail {
   width: 0;
   min-width: 0;
+  height: 0;
+  max-height: 0;
   overflow: hidden;
   opacity: 0;
   pointer-events: none;
@@ -699,16 +701,27 @@ button.secondary:hover:not(:disabled) {
 /* ====== The grid like your sketch ====== */
 /* Колонка 1 = 7 карт (табло), колонка 2 = колода; рука — отдельная строка под табло по центру */
 .game-layout{
+  --avatar-size: 40px;
+  --avatar-column-width: calc(var(--avatar-size) + 16px);
+  --scoreboard-w: calc(((var(--cardW) * 7 + var(--gap) * 6) / 2) * 4 / 5);
+  --score-col-collapsed: var(--avatar-column-width);
+  --score-col-expanded: var(--scoreboard-w);
+  --deck-base: 40px;
+  --deck-shift: calc(var(--score-col-expanded) - var(--score-col-collapsed));
   display: grid;
-  grid-template-columns: var(--handW) 1fr;
+  grid-template-columns: var(--score-col-collapsed) minmax(0, var(--handW));
   grid-template-areas:
     "score deck"
     "hand hand"
     "actions actions";
   gap: 14px;
   align-items: start;
+  justify-content: center;
   max-width: 100%;
   margin: 0 auto;
+}
+
+.game-layout.game-layout--expanded{
 }
 
 /* Табло очков: свернуто = аватарки, развернуто = полное табло */
@@ -732,6 +745,18 @@ button.secondary:hover:not(:disabled) {
   align-items: center;
   justify-content: flex-start;
   min-width: 0;
+  justify-self: start;
+  transform: translateX(var(--deck-base));
+  transition: transform var(--ease) 0.35s;
+}
+
+#game .game-layout.game-layout--expanded .deck-panel{
+  transform: translateX(calc(var(--deck-base) + var(--deck-shift)));
+}
+
+/* Also move deck when scoreboard itself is expanded (no JS class required) */
+#game .game-layout .scoreboard.scoreboard--expanded + .deck-panel{
+  transform: translateX(calc(var(--deck-base) + var(--deck-shift)));
 }
 
 /* make deck visually dominant */
@@ -786,9 +811,11 @@ button.secondary:hover:not(:disabled) {
 }
 
 #game .target-picker-wrap {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
+  display: grid;
+  grid-auto-flow: column;
+  grid-template-rows: repeat(2, auto);
+  grid-auto-columns: max-content;
+  gap: 8px 10px;
   justify-content: center;
   padding: 10px 0;
 }
@@ -835,6 +862,7 @@ button.secondary:hover:not(:disabled) {
   justify-content: center;
   width: var(--handW);
   margin: 0 auto;
+  min-height: var(--cardH);
 }
 
 /* universal sizing for whatever you render as card */
@@ -846,7 +874,7 @@ button.secondary:hover:not(:disabled) {
 
 /* empty hand — no placeholder slots/shadows before cards are dealt */
 #playerAreaCards:empty {
-  min-height: 0;
+  min-height: var(--cardH);
 }
 
 #playerAreaSum{

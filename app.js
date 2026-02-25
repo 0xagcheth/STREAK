@@ -552,6 +552,8 @@
 
     if (totalScoreEl) {
       totalScoreEl.classList.toggle('scoreboard--expanded', scoreboardExpanded);
+      var gameLayout = document.querySelector('#game .game-layout');
+      if (gameLayout) gameLayout.classList.toggle('game-layout--expanded', scoreboardExpanded);
       totalScoreEl.innerHTML = '';
       game.players.forEach(function (p, i) {
         var name = (p.name && p.name.trim()) ? p.name.trim() : ('Player ' + (i + 1));
@@ -601,6 +603,7 @@
         totalScoreEl.addEventListener('click', function () {
           scoreboardExpanded = !scoreboardExpanded;
           totalScoreEl.classList.toggle('scoreboard--expanded', scoreboardExpanded);
+          if (gameLayout) gameLayout.classList.toggle('game-layout--expanded', scoreboardExpanded);
         });
       }
     }
