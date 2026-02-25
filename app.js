@@ -1,5 +1,5 @@
 /**
- * Flip7 — один файл, работает при открытии index.html напрямую (file://)
+ * Flip7 — single file, works when opening index.html directly (file://)
  */
 (function () {
   'use strict';
@@ -34,7 +34,7 @@
     return arr;
   }
 
-  // Flip 7: number cards 0–12 (минимум 2 копии каждого — выше риск дубля/BUST), 7 modifier, 9 action
+  // Flip 7: number cards 0–12 (min 2 copies each — higher duplicate/BUST risk), 7 modifier, 9 action
   var CARD = { NUMBER: 'number', MODIFIER: 'modifier', ACTION: 'action' };
   function buildDeck() {
     var deck = [];
@@ -92,7 +92,7 @@
     var rng = createSeededRng(rawSeed);
     var players = [];
     for (var i = 0; i < Math.min(humanCount, MAX_PLAYERS); i++) {
-      var name = (humanNames[i] && humanNames[i].trim()) ? humanNames[i].trim() : ('Игрок ' + (i + 1));
+      var name = (humanNames[i] && humanNames[i].trim()) ? humanNames[i].trim() : ('Player ' + (i + 1));
       players.push(createPlayer('human-' + i, name, false));
     }
     var fullPlayers = ensureMinPlayers(players);
@@ -120,7 +120,7 @@
       phase: PHASE.PLAYING,
       targetScore: targetScore,
       rng: rng,
-      log: [{ t: 0, msg: 'Игра началась.' }]
+      log: [{ t: 0, msg: 'Game started.' }]
     };
   }
 
@@ -143,7 +143,7 @@
     }
     if (game.players[next].status !== STATUS.ACTIVE) {
       game.phase = PHASE.ROUND_END;
-      game.log.push({ t: logTime, msg: 'Раунд завершён.' });
+      game.log.push({ t: logTime, msg: 'Round over.' });
       return;
     }
     game.turnIndex = next;
@@ -155,30 +155,30 @@
       if (player.roundSet.indexOf(v) >= 0) {
         if (player.hasSecondChance) {
           player.hasSecondChance = false;
-          game.log.push({ t: logTime, msg: player.name + ' дубль ' + v + ' — Second Chance!' });
+          game.log.push({ t: logTime, msg: player.name + ' duplicate ' + v + ' — Second Chance!' });
           return;
         }
         player.roundSet.push(v);
         player.status = STATUS.BUSTED;
         player.roundSum = 0;
-        game.log.push({ t: logTime, msg: player.name + ' дубль ' + v + ' — BUST.' });
+        game.log.push({ t: logTime, msg: player.name + ' duplicate ' + v + ' — BUST.' });
         return;
       }
       player.roundSet.push(v);
       player.roundSum += v;
-      game.log.push({ t: logTime, msg: player.name + ' получил ' + v + '.' });
+      game.log.push({ t: logTime, msg: player.name + ' got ' + v + '.' });
       if (player.roundSet.length >= 7) {
         var flip7Score = computeRoundScore(player);
         player.totalScore += flip7Score;
         player.status = STATUS.STOPPED;
-        game.log.push({ t: logTime + 1, msg: 'Flip 7! +' + flip7Score + '. Раунд завершён.' });
+        game.log.push({ t: logTime + 1, msg: 'Flip 7! +' + flip7Score + '. Round over.' });
         game.phase = PHASE.ROUND_END;
       }
       return;
     }
     if (card.type === CARD.MODIFIER) {
       player.roundModifiers.push(card.value);
-      game.log.push({ t: logTime, msg: player.name + ' модификатор ' + card.value + '.' });
+      game.log.push({ t: logTime, msg: player.name + ' modifier ' + card.value + '.' });
       return;
     }
     if (card.type === CARD.ACTION && card.value === 'SecondChance') {
@@ -190,11 +190,11 @@
       var sc = computeRoundScore(player);
       player.totalScore += sc;
       player.status = STATUS.STOPPED;
-      game.log.push({ t: logTime, msg: player.name + ' Freeze — остановился. +' + sc + '.' });
+      game.log.push({ t: logTime, msg: player.name + ' Freeze — stopped. +' + sc + '.' });
       return;
     }
     if (card.type === CARD.ACTION && card.value === 'FlipThree') {
-      game.log.push({ t: logTime, msg: player.name + ' Flip Three — тянет 3 карты.' });
+      game.log.push({ t: logTime, msg: player.name + ' Flip Three — draws 3 cards.' });
       for (var i = 0; i < 3 && game.deck.length > 0 && player.status === STATUS.ACTIVE && game.phase === PHASE.PLAYING; i++) {
         var c = game.deck.shift();
         applyOneCard(game, player, c, logTime + 1 + i);
@@ -214,7 +214,7 @@
     shuffle(game.deck, game.rng);
     game.turnIndex = 0;
     game.phase = PHASE.PLAYING;
-    game.log.push({ t: logTime, msg: 'Новый раунд. Колода перемешана.' });
+    game.log.push({ t: logTime, msg: 'New round. Deck shuffled.' });
     var t = logTime + 1;
     game.players.forEach(function (p) {
       if (game.deck.length > 0 && game.phase === PHASE.PLAYING && p.status === STATUS.ACTIVE) {
@@ -244,48 +244,48 @@
       if (player.roundSet.indexOf(v) >= 0) {
         if (player.hasSecondChance) {
           player.hasSecondChance = false;
-          game.log.push({ t: logTime, msg: player.name + ' вытянул дубль ' + v + ' — использует Second Chance!' });
+          game.log.push({ t: logTime, msg: player.name + ' drew duplicate ' + v + ' — uses Second Chance!' });
           return { card: card, bust: false };
         }
         player.roundSet.push(v);
         player.status = STATUS.BUSTED;
         player.roundSum = 0;
-        game.log.push({ t: logTime, msg: player.name + ' вытянул ' + v + ' — дубль! BUST.' });
+        game.log.push({ t: logTime, msg: player.name + ' drew ' + v + ' — duplicate! BUST.' });
         return { card: card, bust: true };
       }
       player.roundSet.push(v);
       player.roundSum += v;
-      game.log.push({ t: logTime, msg: player.name + ' вытянул ' + v + '. Сумма: ' + player.roundSum + '.' });
+      game.log.push({ t: logTime, msg: player.name + ' drew ' + v + '. Sum: ' + player.roundSum + '.' });
       if (player.roundSet.length >= 7) {
         var flip7Score = computeRoundScore(player);
         player.totalScore += flip7Score;
         player.status = STATUS.STOPPED;
-        game.log.push({ t: logTime + 1, msg: 'Flip 7! +' + flip7Score + ' (с бонусом 15). Раунд завершён.' });
+        game.log.push({ t: logTime + 1, msg: 'Flip 7! +' + flip7Score + ' (15 bonus). Round over.' });
         game.phase = PHASE.ROUND_END;
       }
       return { card: card, bust: false };
     }
     if (card.type === CARD.MODIFIER) {
       player.roundModifiers.push(card.value);
-      game.log.push({ t: logTime, msg: player.name + ' вытянул модификатор ' + card.value + '.' });
+      game.log.push({ t: logTime, msg: player.name + ' drew modifier ' + card.value + '.' });
       return { card: card, bust: false };
     }
     if (card.type === CARD.ACTION) {
       if (card.value === 'SecondChance') {
         if (player.hasSecondChance) {
-          game.log.push({ t: logTime, msg: player.name + ' вытянул Second Chance — уже есть, сброс.' });
+          game.log.push({ t: logTime, msg: player.name + ' drew Second Chance — already had one, reset.' });
         } else {
           player.hasSecondChance = true;
-          game.log.push({ t: logTime, msg: player.name + ' вытянул Second Chance.' });
+          game.log.push({ t: logTime, msg: player.name + ' drew Second Chance.' });
         }
         return { card: card, bust: false };
       }
       if (card.value === 'Freeze') {
-        game.log.push({ t: logTime, msg: player.name + ' вытянул Freeze — обязан остановиться.' });
+        game.log.push({ t: logTime, msg: player.name + ' drew Freeze — must stop.' });
         return { card: card, bust: false, freeze: true };
       }
       if (card.value === 'FlipThree') {
-        game.log.push({ t: logTime, msg: player.name + ' вытянул Flip Three — тянет 3 карты.' });
+        game.log.push({ t: logTime, msg: player.name + ' drew Flip Three — draws 3 cards.' });
         return { card: card, bust: false, flipThree: true };
       }
     }
@@ -296,7 +296,7 @@
     var logTime = game.log.length;
     if (game.phase !== PHASE.PLAYING || player.status !== STATUS.ACTIVE) return { success: false };
     if (game.deck.length === 0) {
-      game.log.push({ t: logTime, msg: 'Колода пуста — раунд завершён.' });
+      game.log.push({ t: logTime, msg: 'Deck empty — round over.' });
       game.phase = PHASE.ROUND_END;
       return { success: false };
     }
@@ -311,7 +311,7 @@
       var bankScore = computeRoundScore(player);
       player.totalScore += bankScore;
       player.status = STATUS.STOPPED;
-      game.log.push({ t: logTime + 1, msg: player.name + ' остановился (Freeze). +' + bankScore + '. Всего: ' + player.totalScore + '.' });
+      game.log.push({ t: logTime + 1, msg: player.name + ' stopped (Freeze). +' + bankScore + '. Total: ' + player.totalScore + '.' });
       advanceTurn(game, actorIndex, logTime + 1);
       return { success: true, card: result.card };
     }
@@ -323,7 +323,7 @@
           var sc = computeRoundScore(player);
           player.totalScore += sc;
           player.status = STATUS.STOPPED;
-          game.log.push({ t: logTime + 2 + i, msg: player.name + ' остановился (Freeze). +' + sc + '. Всего: ' + player.totalScore + '.' });
+          game.log.push({ t: logTime + 2 + i, msg: player.name + ' stopped (Freeze). +' + sc + '. Total: ' + player.totalScore + '.' });
           advanceTurn(game, actorIndex, logTime + 2 + i);
           return { success: true, card: result.card };
         }
@@ -343,9 +343,9 @@
     var roundScore = computeRoundScore(player);
     player.totalScore += roundScore;
     player.status = STATUS.STOPPED;
-    game.log.push({ t: logTime, msg: player.name + ' остановился. +' + roundScore + '. Всего: ' + player.totalScore + '.' });
+    game.log.push({ t: logTime, msg: player.name + ' stopped. +' + roundScore + '. Total: ' + player.totalScore + '.' });
     if (player.totalScore >= game.targetScore) {
-      game.log.push({ t: logTime + 1, msg: player.name + ' достиг ' + game.targetScore + '! Ожидание конца раунда.' });
+      game.log.push({ t: logTime + 1, msg: player.name + ' reached ' + game.targetScore + '! Waiting for round end.' });
     }
     var actorIndex = game.players.indexOf(player);
     advanceTurn(game, actorIndex, logTime);
@@ -359,7 +359,7 @@
       candidates.sort(function (a, b) { return b.totalScore - a.totalScore; });
       var winner = candidates[0];
       game.phase = PHASE.GAME_OVER;
-      game.log.push({ t: game.log.length, msg: 'Игра окончена. Победитель: ' + winner.name + ' (' + winner.totalScore + ' очков).' });
+      game.log.push({ t: game.log.length, msg: 'Game over. Winner: ' + winner.name + ' (' + winner.totalScore + ' points).' });
       return;
     }
     startNewRound(game, game.log.length);
@@ -458,7 +458,7 @@
     document.getElementById('setup').classList.add('hidden');
     document.getElementById('game').classList.add('hidden');
     document.getElementById('gameOver').classList.remove('hidden');
-    document.getElementById('winnerTitle').textContent = 'Победитель: ' + winnerName;
+    document.getElementById('winnerTitle').textContent = 'Winner: ' + winnerName;
   }
 
   function getHumanNames() {
@@ -487,18 +487,18 @@
     var canDrawHuman = canDraw && !currentPlayer.isBot;
     if (deckStack) {
       deckStack.classList.toggle('disabled', !canDrawHuman);
-      deckStack.title = canDrawHuman ? 'Нажми, чтобы вытянуть карту' : (currentPlayer && currentPlayer.isBot ? 'Ход: ' + currentPlayer.name + '…' : '');
+      deckStack.title = canDrawHuman ? 'Tap to draw a card' : (currentPlayer && currentPlayer.isBot ? 'Turn: ' + currentPlayer.name + '…' : '');
     }
     if (btnDraw) btnDraw.disabled = !canDrawHuman;
     if (btnStop) btnStop.disabled = !currentPlayer || currentPlayer.isBot || currentPlayer.status !== STATUS.ACTIVE;
 
     if (currentStatus) {
-      if (!currentPlayer) currentStatus.textContent = 'Раунд завершён или ожидание.';
-      else if (currentPlayer.isBot) currentStatus.textContent = 'Ход: ' + currentPlayer.name;
-      else currentStatus.textContent = 'Ваш ход — Взять или STOP';
+      if (!currentPlayer) currentStatus.textContent = 'Round over or waiting.';
+      else if (currentPlayer.isBot) currentStatus.textContent = 'Turn: ' + currentPlayer.name;
+      else currentStatus.textContent = 'Your turn — Draw or STOP';
     }
 
-    // Человек всегда внизу стола, стол не крутится при смене хода
+    // Human is always at bottom of table; table doesn't rotate on turn change
     edges.innerHTML = '';
     var namesWrap = document.createElement('div');
     namesWrap.className = 'table-edges-names';
@@ -548,7 +548,7 @@
       if (p.status === STATUS.BUSTED) cardsBox.classList.add('busted');
       var cardsRow = document.createElement('div');
       cardsRow.className = 'player-edge-cards';
-      cardsRow.setAttribute('aria-label', 'Карты ' + p.name);
+      cardsRow.setAttribute('aria-label', 'Cards for ' + p.name);
       p.roundSet.forEach(function (v, i) {
         var c = document.createElement('div');
         c.className = 'card-face card-number';
@@ -602,7 +602,7 @@
           areaCards.appendChild(sc);
         }
         var rs = human.roundSet.length || human.roundModifiers.length ? computeRoundScore(human) : 0;
-        areaSum.textContent = rs ? 'Сумма раунда: ' + rs : '';
+        areaSum.textContent = rs ? 'Round sum: ' + rs : '';
       } else {
         areaSum.textContent = '';
       }
@@ -624,8 +624,8 @@
       showGame();
       runTurn();
     } catch (err) {
-      console.error('Ошибка при старте игры:', err);
-      alert('Ошибка при старте: ' + err.message);
+      console.error('Error starting game:', err);
+      alert('Error starting: ' + err.message);
     }
   }
 
