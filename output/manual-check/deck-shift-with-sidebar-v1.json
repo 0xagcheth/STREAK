@@ -1,0 +1,18 @@
+{
+  "collapsed": {
+    "expanded": false,
+    "layoutCenterX": 640,
+    "deckCenterX": 640,
+    "deckPanelLeft": 438,
+    "minButtonLeft": 504
+  },
+  "expanded": {
+    "expanded": true,
+    "layoutCenterX": 640,
+    "deckCenterX": 718,
+    "deckPanelLeft": 516,
+    "minButtonLeft": 660
+  },
+  "deckShiftX": 78,
+  "buttonShiftX": 156
+}

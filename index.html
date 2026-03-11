@@ -4,16 +4,16 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <title>STREAK — Push Your Luck</title>
-  <link rel="stylesheet" href="styles.css?v=4">
+  <link rel="stylesheet" href="styles.css?v=32">
+  <link rel="stylesheet" href="theme-underground-comic.css?v=1">
 </head>
-<body>
+<body class="theme-underground-comic">
   <div id="app">
-    <header>
-      <h1>STREAK</h1>
-      <p class="subtitle">First to 200 points</p>
-    </header>
-
     <section id="setup" class="panel">
+      <header>
+        <h1>STREAK</h1>
+        <p class="subtitle">First to 200 points</p>
+      </header>
       <div class="setup-row">
         <input type="text" id="humanName" placeholder="Player 1">
       </div>
@@ -26,13 +26,11 @@
         <aside id="totalScoreDisplay" class="scoreboard" aria-live="polite"></aside>
 
         <div class="deck-panel">
-          <div class="deck-wrap">
+          <div class="deck-wrap" id="deckWrap">
             <div id="deckStack" class="deck-stack" title="Tap to draw a card">
-              <span class="deck-count" id="deckCount">94</span>
             </div>
-            <div class="deck-label">Deck</div>
+            <span class="deck-count" id="deckCount">94</span>
           </div>
-          <span id="currentStatus" class="game-status" aria-live="polite"></span>
           <div id="targetPickerWrap" class="target-picker-wrap hidden" aria-live="polite"></div>
         </div>
 
@@ -47,8 +45,15 @@
             <button id="btnStop" type="button">STOP</button>
           </div>
           <button id="btnNewGame" type="button" class="secondary newgame-wide">New game</button>
+          <div id="log" class="mini-log" aria-live="polite"></div>
         </div>
 
+      </div>
+      <div id="fxLayer" class="fx-layer" aria-hidden="true"></div>
+      <div id="scoreBurstLayer" class="score-burst-layer" aria-hidden="true"></div>
+      <div id="eventToast" class="event-toast" aria-live="polite"></div>
+      <div id="roundOverlay" class="round-overlay" aria-hidden="true">
+        <span id="roundOverlayText">Round over</span>
       </div>
     </section>
 
@@ -58,6 +63,8 @@
     </section>
   </div>
 
-  <script src="app.js?v=4"></script>
+  <script src="src/app-core.js"></script>
+  <script src="src/app-ui.js"></script>
+  <script src="src/app-main.js"></script>
 </body>
 </html>

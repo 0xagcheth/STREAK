@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="360" height="540" viewBox="0 0 360 540">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#f8ddff"/>
+      <stop offset="56%" stop-color="#ac84ea"/>
+      <stop offset="100%" stop-color="#21153d"/>
+    </linearGradient>
+    <pattern id="hatch" width="14" height="14" patternUnits="userSpaceOnUse" patternTransform="rotate(-20)">
+      <rect width="14" height="14" fill="none"/>
+      <rect x="-2" width="6" height="14" fill="#21153d" fill-opacity="0.2"/>
+      <circle cx="4" cy="4" r="0.8" fill="#fff5d8" fill-opacity="0.45"/>
+      <circle cx="10" cy="9" r="0.8" fill="#fff5d8" fill-opacity="0.3"/>
+    </pattern>
+    <pattern id="foilText" width="124" height="54" patternUnits="userSpaceOnUse" patternTransform="rotate(-14)">
+      <rect width="124" height="54" fill="#894fd4"/>
+      <text x="8" y="37" font-family="Anton, Oswald, Impact, sans-serif" font-size="34" fill="#ffe9c5" letter-spacing="2">STREAK</text>
+      <text x="62" y="51" font-family="Barlow Condensed, Arial, sans-serif" font-size="10" fill="#1b0f16" fill-opacity="0.45">NOIR</text>
+    </pattern>
+    <radialGradient id="glow" cx="50%" cy="56%" r="58%">
+      <stop offset="0%" stop-color="#ff88c5" stop-opacity="0.62"/>
+      <stop offset="100%" stop-color="#ff88c5" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+
+  <rect width="360" height="540" rx="30" fill="url(#bg)"/>
+  <rect width="360" height="540" rx="30" fill="url(#hatch)"/>
+  <rect width="360" height="540" rx="30" fill="url(#glow)"/>
+
+  
+  <g transform="translate(24 28)">
+    <rect x="0" y="0" width="312" height="134" rx="16" fill="#fff5de" fill-opacity="0.84" stroke="#21153d" stroke-width="6"/>
+    <path d="M8 112 C74 84, 136 78, 204 102 C248 118, 286 116, 304 108" fill="none" stroke="#21153d" stroke-width="4" opacity="0.35"/>
+    <path d="M238 22 C216 22 198 34 186 54 C174 74 174 100 188 118" fill="none" stroke="#21153d" stroke-width="6" stroke-linecap="round"/>
+    <path d="M238 22 C252 24 264 34 270 46 C276 58 274 74 266 84" fill="none" stroke="#21153d" stroke-width="6" stroke-linecap="round"/>
+    <path d="M200 72 Q216 66 232 72" fill="none" stroke="#21153d" stroke-width="5" stroke-linecap="round"/>
+    <path d="M198 90 Q214 98 232 94" fill="none" stroke="#21153d" stroke-width="5" stroke-linecap="round"/>
+    <path d="M120 40 C106 42 92 52 86 66 C80 80 82 98 92 110" fill="none" stroke="#21153d" stroke-width="6" stroke-linecap="round"/>
+    <path d="M120 40 C136 42 148 52 152 66 C156 80 154 94 146 104" fill="none" stroke="#ff88c5" stroke-width="5" stroke-linecap="round"/>
+    <path d="M102 78 Q114 70 128 78" fill="none" stroke="#21153d" stroke-width="4" stroke-linecap="round"/>
+  </g>
+
+  <path d="M-40 296 L404 116 L432 202 L-12 382 Z" fill="url(#foilText)" opacity="0.96"/>
+  <path d="M-56 418 L388 238 L416 302 L-28 482 Z" fill="url(#foilText)" opacity="0.94"/>
+
+  <circle cx="180" cy="274" r="112" fill="#fff6de" fill-opacity="0.9" stroke="#21153d" stroke-width="10"/>
+  <g fill="#ff88c5" stroke="#21153d" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"><path d="M180 172 L194 208 L234 208 L202 228 L214 266 L180 244 L146 266 L158 228 L126 208 L166 208 Z"/></g>
+
+  <g>
+    <text x="180" y="312" text-anchor="middle" font-family="Anton, Oswald, Impact, sans-serif" font-size="154" fill="#fff4d0" stroke="#21153d" stroke-width="10" paint-order="stroke fill">8</text>
+    <text x="180" y="312" text-anchor="middle" font-family="Anton, Oswald, Impact, sans-serif" font-size="154" fill="#ff88c5" fill-opacity="0.46">8</text>
+  </g>
+
+  <rect x="34" y="448" width="292" height="62" rx="14" fill="#120f18" fill-opacity="0.86"/>
+  <text x="180" y="485" text-anchor="middle" font-family="Anton, Oswald, Impact, sans-serif" font-size="30" fill="#ffe8c8" letter-spacing="2">NOIR STREAK 8</text>
+
+  <rect x="12" y="12" width="336" height="516" rx="26" fill="none" stroke="#21153d" stroke-width="10"/>
+</svg>

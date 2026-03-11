@@ -1,0 +1,45 @@
+{
+  "metrics": [
+    {
+      "avatarDisplay": "none",
+      "avatarW": "0px",
+      "nameY": 32.453125
+    },
+    {
+      "avatarDisplay": "none",
+      "avatarW": "0px",
+      "nameY": 80.453125
+    },
+    {
+      "avatarDisplay": "none",
+      "avatarW": "0px",
+      "nameY": 128.453125
+    },
+    {
+      "avatarDisplay": "none",
+      "avatarW": "0px",
+      "nameY": 176.453125
+    },
+    {
+      "avatarDisplay": "none",
+      "avatarW": "0px",
+      "nameY": 224.453125
+    },
+    {
+      "avatarDisplay": "none",
+      "avatarW": "0px",
+      "nameY": 272.453125
+    },
+    {
+      "avatarDisplay": "none",
+      "avatarW": "0px",
+      "nameY": 320.453125
+    },
+    {
+      "avatarDisplay": "none",
+      "avatarW": "0px",
+      "nameY": 368.453125
+    }
+  ],
+  "errors": []
+}

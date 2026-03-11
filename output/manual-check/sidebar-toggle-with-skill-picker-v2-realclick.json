@@ -1,0 +1,30 @@
+{
+  "clickX": 440,
+  "clickY": 328,
+  "boardRect": {
+    "left": 420,
+    "top": 24,
+    "right": 476,
+    "bottom": 405.59375,
+    "width": 56,
+    "height": 381.59375
+  },
+  "wrapRect": {
+    "left": 438,
+    "top": 314,
+    "right": 842,
+    "bottom": 530,
+    "width": 404,
+    "height": 216
+  },
+  "hitBefore": {
+    "tag": "DIV",
+    "id": "",
+    "cls": "scoreboard-avatar"
+  },
+  "expandedBefore": false,
+  "expandedAfterFirst": true,
+  "expandedAfterSecond": false,
+  "toggledOpen": true,
+  "toggledClosed": true
+}

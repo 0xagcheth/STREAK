@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="360" height="540" viewBox="0 0 360 540">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#ffe9b0"/>
+      <stop offset="100%" stop-color="#ffb4c0"/>
+    </linearGradient>
+    <pattern id="splash" width="120" height="120" patternUnits="userSpaceOnUse">
+      <path d="M20 30 C70 -10 140 40 110 90 C80 140 30 120 0 70Z" fill="#0b1026" fill-opacity="0.16"/>
+    </pattern>
+    <pattern id="tape" width="140" height="60" patternUnits="userSpaceOnUse" patternTransform="rotate(-18)">
+      <rect width="140" height="60" fill="#e5263f"/>
+      <text x="8" y="42" font-family="Bebas Neue, Impact, sans-serif" font-size="44" font-weight="800" fill="#ffe8c7" letter-spacing="4">STREAK</text>
+    </pattern>
+  </defs>
+  <rect width="360" height="540" rx="30" fill="url(#bg)"/>
+  <rect width="360" height="540" rx="30" fill="url(#splash)" opacity="0.45"/>
+  <path d="M-40 240 L400 80 L420 160 L-20 320 Z" fill="url(#tape)" opacity="0.98"/>
+  <path d="M-60 360 L380 200 L400 270 L-40 440 Z" fill="url(#tape)" opacity="0.98"/>
+  <g transform="translate(72 118)">
+    <path d="M110 44 C152 30 198 58 208 110 C218 162 188 232 146 260 C104 288 50 272 34 232 C18 192 30 128 70 86 Z" fill="#1fb8b2" stroke="#0b1026" stroke-width="9"/>
+    <path d="M80 104 Q140 64 200 104" fill="#5c3cf3" stroke="#0b1026" stroke-width="9"/>
+    <path d="M96 176 Q140 154 184 176" fill="none" stroke="#e5263f" stroke-width="9" stroke-linecap="round"/>
+    <circle cx="120" cy="132" r="12" fill="#ffe8c7" stroke="#0b1026" stroke-width="7"/>
+    <circle cx="164" cy="132" r="11" fill="#ffe8c7" stroke="#0b1026" stroke-width="7"/>
+  </g>
+  <rect x="12" y="12" width="336" height="516" rx="26" fill="none" stroke="#0b1026" stroke-width="12"/>
+</svg>

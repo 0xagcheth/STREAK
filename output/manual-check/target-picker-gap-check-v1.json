@@ -1,0 +1,38 @@
+{
+  "collapsed": {
+    "expanded": false,
+    "panel": {
+      "left": 420,
+      "right": 476,
+      "width": 56
+    },
+    "field": {
+      "left": 438,
+      "right": 842,
+      "width": 404
+    },
+    "minButtonLeft": 504,
+    "horizontalGap": 28,
+    "rowCount": 4,
+    "overflowCount": 0
+  },
+  "expanded": {
+    "expanded": true,
+    "panel": {
+      "left": 420,
+      "right": 554,
+      "width": 134
+    },
+    "field": {
+      "left": 438,
+      "right": 842,
+      "width": 404
+    },
+    "minButtonLeft": 582,
+    "horizontalGap": 28,
+    "rowCount": 5,
+    "overflowCount": 0
+  },
+  "shotCollapsed": "/Users/agch/Library/Mobile Documents/iCloud~md~obsidian/Documents/agcherepovskij/1. Projects/miniAPP/STREAK/output/manual-check/target-picker-gap-collapsed-v1.png",
+  "shotExpanded": "/Users/agch/Library/Mobile Documents/iCloud~md~obsidian/Documents/agcherepovskij/1. Projects/miniAPP/STREAK/output/manual-check/target-picker-gap-expanded-v1.png"
+}

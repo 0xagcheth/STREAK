@@ -1,0 +1,45 @@
+{
+  "metrics": [
+    {
+      "id": "btnStart",
+      "exists": true,
+      "outline": "rgb(17, 17, 17) none 0px",
+      "boxShadow": "none",
+      "border": "1px solid rgb(31, 31, 31)",
+      "labelOutline": "rgb(17, 17, 17) none 0px",
+      "labelBoxShadow": "none",
+      "labelBorder": "0px none rgb(17, 17, 17)"
+    },
+    {
+      "id": "btnDraw",
+      "exists": true,
+      "outline": "rgb(17, 17, 17) none 0px",
+      "boxShadow": "none",
+      "border": "1px solid rgb(31, 31, 31)",
+      "labelOutline": "rgb(17, 17, 17) none 0px",
+      "labelBoxShadow": "none",
+      "labelBorder": "0px none rgb(17, 17, 17)"
+    },
+    {
+      "id": "btnStop",
+      "exists": true,
+      "outline": "rgb(17, 17, 17) none 0px",
+      "boxShadow": "none",
+      "border": "1px solid rgb(31, 31, 31)",
+      "labelOutline": "rgb(17, 17, 17) none 0px",
+      "labelBoxShadow": "none",
+      "labelBorder": "0px none rgb(17, 17, 17)"
+    },
+    {
+      "id": "btnNewGame",
+      "exists": true,
+      "outline": "rgb(17, 17, 17) none 0px",
+      "boxShadow": "none",
+      "border": "1px solid rgb(31, 31, 31)",
+      "labelOutline": "rgb(17, 17, 17) none 0px",
+      "labelBoxShadow": "none",
+      "labelBorder": "0px none rgb(17, 17, 17)"
+    }
+  ],
+  "errors": []
+}

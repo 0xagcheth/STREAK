@@ -1,0 +1,106 @@
+{
+  "field": {
+    "left": 438,
+    "right": 842,
+    "width": 404
+  },
+  "wrap": {
+    "left": 516,
+    "right": 842,
+    "width": 326
+  },
+  "rowCount": 10,
+  "overflowCount": 0,
+  "buttons": [
+    {
+      "text": "Shadow",
+      "left": 516,
+      "right": 842,
+      "top": 324,
+      "bottom": 367,
+      "outsideLeft": false,
+      "outsideRight": false
+    },
+    {
+      "text": "LuckyAce",
+      "left": 516,
+      "right": 842,
+      "top": 375,
+      "bottom": 418,
+      "outsideLeft": false,
+      "outsideRight": false
+    },
+    {
+      "text": "Phoenix",
+      "left": 516,
+      "right": 842,
+      "top": 426,
+      "bottom": 469,
+      "outsideLeft": false,
+      "outsideRight": false
+    },
+    {
+      "text": "Raven",
+      "left": 516,
+      "right": 842,
+      "top": 477,
+      "bottom": 520,
+      "outsideLeft": false,
+      "outsideRight": false
+    },
+    {
+      "text": "Storm",
+      "left": 516,
+      "right": 842,
+      "top": 528,
+      "bottom": 571,
+      "outsideLeft": false,
+      "outsideRight": false
+    },
+    {
+      "text": "Cipher",
+      "left": 516,
+      "right": 842,
+      "top": 579,
+      "bottom": 622,
+      "outsideLeft": false,
+      "outsideRight": false
+    },
+    {
+      "text": "Dealer",
+      "left": 516,
+      "right": 842,
+      "top": 630,
+      "bottom": 673,
+      "outsideLeft": false,
+      "outsideRight": false
+    },
+    {
+      "text": "HighRoller",
+      "left": 516,
+      "right": 842,
+      "top": 681,
+      "bottom": 724,
+      "outsideLeft": false,
+      "outsideRight": false
+    },
+    {
+      "text": "Rocket",
+      "left": 516,
+      "right": 842,
+      "top": 732,
+      "bottom": 775,
+      "outsideLeft": false,
+      "outsideRight": false
+    },
+    {
+      "text": "Blade",
+      "left": 516,
+      "right": 842,
+      "top": 783,
+      "bottom": 826,
+      "outsideLeft": false,
+      "outsideRight": false
+    }
+  ]
+}

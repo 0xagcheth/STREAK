@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="360" height="540" viewBox="0 0 360 540">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#15111c"/>
+      <stop offset="100%" stop-color="#e64045"/>
+    </linearGradient>
+    <pattern id="stripes" width="22" height="22" patternUnits="userSpaceOnUse" patternTransform="rotate(24)">
+      <rect width="22" height="22" fill="none"/>
+      <rect x="-4" width="10" height="22" fill="#5c3cf3" fill-opacity="0.35"/>
+    </pattern>
+  </defs>
+  <rect width="360" height="540" rx="26" fill="url(#bg)"/>
+  <rect width="360" height="540" rx="26" fill="url(#stripes)"/>
+  <rect x="30" y="36" width="300" height="468" rx="22" fill="none" stroke="#fff7e6" stroke-width="10"/>
+  <path d="M90 160 Q180 80 270 160" stroke="#fff7e6" stroke-width="16" fill="none" stroke-linecap="round"/>
+  <path d="M120 230 L240 320" stroke="#1fb8b2" stroke-width="16" stroke-linecap="round"/>
+  <path d="M240 230 L120 320" stroke="#f4c14f" stroke-width="16" stroke-linecap="round"/>
+  <circle cx="180" cy="270" r="38" fill="#e64045" stroke="#fff7e6" stroke-width="10"/>
+</svg>

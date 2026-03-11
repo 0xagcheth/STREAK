@@ -1,0 +1,698 @@
+/* STREAK visual reset: after-hours editorial poster theme
+   Visual-only overrides. Layout geometry stays in styles.css. */
+
+body.theme-afterhours-poster {
+  --poster-paper: #efe5d7;
+  --poster-paper-2: #f7efe7;
+  --poster-ink: #151b35;
+  --poster-ink-soft: rgba(21, 27, 53, 0.7);
+  --poster-hot: #d84b45;
+  --poster-hot-dark: #a93331;
+  --poster-cool: #66b7ad;
+  --poster-energy: #dfb244;
+  --poster-muted: #b6ad9f;
+  --poster-shadow: 5px 6px 0 rgba(21, 27, 53, 0.9);
+  --poster-shadow-sm: 3px 4px 0 rgba(21, 27, 53, 0.84);
+  --poster-display: "Anton", "Bangers", Impact, sans-serif;
+  --poster-support: "Comic Neue", "Trebuchet MS", "Segoe UI", sans-serif;
+  color: var(--poster-ink);
+  font-family: var(--poster-support);
+  background:
+    radial-gradient(circle at 12% 18%, rgba(102, 183, 173, 0.18) 0%, rgba(102, 183, 173, 0) 22%),
+    radial-gradient(circle at 88% 82%, rgba(216, 75, 69, 0.15) 0%, rgba(216, 75, 69, 0) 26%),
+    linear-gradient(0deg, rgba(21, 27, 53, 0.08) 0 2px, transparent 2px 18px),
+    linear-gradient(90deg, rgba(21, 27, 53, 0.05) 0 2px, transparent 2px 18px),
+    linear-gradient(145deg, #e8ddd0 0%, #f1e6d7 38%, #dfb244 100%);
+  background-attachment: fixed;
+}
+
+body.theme-afterhours-poster::before,
+body.theme-afterhours-poster::after {
+  content: "";
+  position: fixed;
+  pointer-events: none;
+  z-index: 0;
+}
+
+body.theme-afterhours-poster::before {
+  left: -5vw;
+  bottom: 7vh;
+  width: 160px;
+  height: 160px;
+  border-radius: 50%;
+  background:
+    radial-gradient(circle at center, rgba(21, 27, 53, 0.22) 0 14%, transparent 14% 100%),
+    radial-gradient(circle at center, rgba(21, 27, 53, 0.1) 0 1.5px, transparent 1.5px 10px);
+  background-size: 100% 100%, 14px 14px;
+  opacity: 0.6;
+}
+
+body.theme-afterhours-poster::after {
+  top: 32px;
+  right: -24px;
+  width: 160px;
+  height: 120px;
+  background:
+    linear-gradient(132deg, var(--poster-hot) 0 35%, transparent 35% 100%),
+    repeating-linear-gradient(90deg, rgba(21, 27, 53, 0.12) 0 3px, transparent 3px 16px);
+  clip-path: polygon(44% 0, 100% 0, 62% 100%, 0 78%);
+  opacity: 0.86;
+}
+
+body.theme-afterhours-poster #app {
+  position: relative;
+  z-index: 1;
+}
+
+body.theme-afterhours-poster #setup,
+body.theme-afterhours-poster #game,
+body.theme-afterhours-poster #gameOver {
+  background:
+    linear-gradient(0deg, rgba(21, 27, 53, 0.06) 0 2px, transparent 2px 16px),
+    linear-gradient(90deg, rgba(21, 27, 53, 0.04) 0 2px, transparent 2px 16px),
+    linear-gradient(180deg, rgba(247, 239, 231, 0.96) 0%, rgba(239, 229, 215, 0.98) 100%) !important;
+  border-color: var(--poster-ink) !important;
+  box-shadow: var(--poster-shadow) !important;
+}
+
+body.theme-afterhours-poster #setup::before,
+body.theme-afterhours-poster #game::before,
+body.theme-afterhours-poster #gameOver::before {
+  opacity: 0 !important;
+}
+
+body.theme-afterhours-poster #setup::after,
+body.theme-afterhours-poster #game::after,
+body.theme-afterhours-poster #gameOver::after {
+  display: none !important;
+}
+
+body.theme-afterhours-poster header h1,
+body.theme-afterhours-poster #winnerTitle {
+  font-family: var(--poster-display);
+  color: var(--poster-ink);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  text-shadow: 3px 3px 0 rgba(216, 75, 69, 0.18);
+  transform: skewX(-6deg);
+}
+
+body.theme-afterhours-poster .subtitle {
+  background: var(--poster-energy) !important;
+  border-color: var(--poster-ink) !important;
+  box-shadow: var(--poster-shadow-sm) !important;
+  color: var(--poster-ink) !important;
+  font-family: var(--poster-display) !important;
+  letter-spacing: 0.08em !important;
+}
+
+body.theme-afterhours-poster .setup-row input {
+  background: rgba(255, 255, 255, 0.84) !important;
+  border-color: var(--poster-ink) !important;
+  box-shadow: var(--poster-shadow-sm) !important;
+  color: var(--poster-ink) !important;
+  font-family: var(--poster-support) !important;
+}
+
+body.theme-afterhours-poster .setup-row input::placeholder {
+  color: rgba(21, 27, 53, 0.44) !important;
+}
+
+body.theme-afterhours-poster button,
+body.theme-afterhours-poster #targetPickerWrap .target-picker-btn {
+  font-family: var(--poster-display) !important;
+  letter-spacing: 0.06em !important;
+  text-transform: uppercase !important;
+  border-color: var(--poster-ink) !important;
+  box-shadow: var(--poster-shadow-sm) !important;
+  text-shadow: none !important;
+}
+
+body.theme-afterhours-poster #btnStart,
+body.theme-afterhours-poster #btnDraw,
+body.theme-afterhours-poster #btnNewGameFromOver {
+  background: linear-gradient(145deg, var(--poster-hot) 0%, #ef6c52 100%) !important;
+  color: #fff8f1 !important;
+}
+
+body.theme-afterhours-poster #btnStop {
+  background: linear-gradient(145deg, var(--poster-cool) 0%, #87d3c4 100%) !important;
+  color: var(--poster-ink) !important;
+}
+
+body.theme-afterhours-poster button.secondary,
+body.theme-afterhours-poster #btnNewGame {
+  background: linear-gradient(145deg, #f7efe6 0%, #e7d7c1 100%) !important;
+  color: var(--poster-ink) !important;
+}
+
+body.theme-afterhours-poster button:hover:not(:disabled),
+body.theme-afterhours-poster #targetPickerWrap .target-picker-btn:hover:not(:disabled) {
+  box-shadow: 6px 8px 0 rgba(21, 27, 53, 0.94) !important;
+  filter: saturate(1.05);
+}
+
+body.theme-afterhours-poster button:active:not(:disabled),
+body.theme-afterhours-poster #targetPickerWrap .target-picker-btn:active:not(:disabled) {
+  box-shadow: 2px 2px 0 rgba(21, 27, 53, 0.9) !important;
+}
+
+body.theme-afterhours-poster #game .scoreboard,
+body.theme-afterhours-poster #game .hand-panel,
+body.theme-afterhours-poster #game .actions-panel {
+  border-color: var(--poster-ink) !important;
+  box-shadow: var(--poster-shadow) !important;
+}
+
+body.theme-afterhours-poster #game .scoreboard {
+  gap: 3px !important;
+  padding-top: 7px !important;
+  padding-bottom: 7px !important;
+  background:
+    linear-gradient(180deg, rgba(247, 239, 231, 0.94) 0%, rgba(234, 224, 210, 0.98) 100%),
+    linear-gradient(90deg, rgba(21, 27, 53, 0.05) 0 2px, transparent 2px 16px) !important;
+}
+
+body.theme-afterhours-poster #game .scoreboard::before {
+  background: linear-gradient(180deg, var(--poster-hot) 0%, var(--poster-energy) 100%) !important;
+  opacity: 0.82 !important;
+}
+
+body.theme-afterhours-poster #game .scoreboard::after {
+  background:
+    linear-gradient(135deg, rgba(102, 183, 173, 0.14) 0 28%, transparent 28% 100%),
+    radial-gradient(circle at 18% 20%, rgba(21, 27, 53, 0.1) 0 1.3px, transparent 1.3px 10px) !important;
+  background-size: 100% 100%, 15px 15px !important;
+  opacity: 0.55 !important;
+}
+
+body.theme-afterhours-poster .scoreboard-player-detail {
+  background: transparent !important;
+}
+
+body.theme-afterhours-poster .scoreboard-player {
+  min-height: 46px;
+}
+
+body.theme-afterhours-poster .scoreboard:not(.scoreboard--expanded) .scoreboard-player {
+  min-height: 46px;
+  align-items: flex-start;
+  justify-content: center;
+  padding-top: 2px;
+}
+
+body.theme-afterhours-poster .scoreboard:not(.scoreboard--expanded) {
+  gap: 4px !important;
+}
+
+body.theme-afterhours-poster #game .scoreboard.scoreboard--expanded {
+  gap: 5px !important;
+}
+
+body.theme-afterhours-poster .scoreboard:not(.scoreboard--expanded) .scoreboard-avatar {
+  width: 43.2px !important;
+  height: 43.2px !important;
+  min-width: 43.2px !important;
+  min-height: 43.2px !important;
+  margin-top: 3px !important;
+  align-self: flex-start;
+}
+
+body.theme-afterhours-poster .scoreboard.scoreboard--expanded .scoreboard-player-detail {
+  background: rgba(255, 255, 255, 0.42) !important;
+  border-color: rgba(21, 27, 53, 0.36) !important;
+  padding: 0 2px 1px !important;
+}
+
+body.theme-afterhours-poster .scoreboard-avatar {
+  background: linear-gradient(145deg, #f0ded1 0%, #e6cdbb 100%) !important;
+  border-color: var(--poster-ink) !important;
+  box-shadow: var(--poster-shadow-sm) !important;
+  color: var(--poster-ink) !important;
+  font-family: var(--poster-display) !important;
+}
+
+body.theme-afterhours-poster .scoreboard-player.is-active .scoreboard-avatar {
+  background: linear-gradient(145deg, var(--poster-hot) 0%, #ef7155 100%) !important;
+  color: #fff8f1 !important;
+}
+
+body.theme-afterhours-poster .scoreboard-player-name {
+  color: var(--poster-ink) !important;
+  font-family: var(--poster-display) !important;
+  letter-spacing: 0.05em !important;
+  font-size: 0.68rem !important;
+  line-height: 1 !important;
+}
+
+body.theme-afterhours-poster .scoreboard-player-points {
+  background: linear-gradient(145deg, var(--poster-ink) 0%, #28325d 100%) !important;
+  border-color: var(--poster-ink) !important;
+  box-shadow: 2px 3px 0 rgba(21, 27, 53, 0.9) !important;
+  padding: 1px 5px 2px !important;
+}
+
+body.theme-afterhours-poster .scoreboard-player-points-label,
+body.theme-afterhours-poster .scoreboard-player-points .score-value {
+  color: #f8f1e8 !important;
+  text-shadow: none !important;
+}
+
+body.theme-afterhours-poster .scoreboard-round-gain {
+  color: var(--poster-ink) !important;
+  background: var(--poster-energy) !important;
+  border: 3px solid var(--poster-ink) !important;
+  box-shadow: var(--poster-shadow-sm) !important;
+  padding: 3px 8px !important;
+  clip-path: polygon(7% 0, 100% 0, 93% 100%, 0 100%) !important;
+  transform: rotate(-9deg) !important;
+}
+
+body.theme-afterhours-poster .scoreboard-round-gain::after {
+  display: none !important;
+}
+
+body.theme-afterhours-poster .total-score-cards .card-face {
+  border-color: var(--poster-ink) !important;
+  box-shadow: 1px 1px 0 rgba(21, 27, 53, 0.8) !important;
+}
+
+body.theme-afterhours-poster .total-score-row {
+  min-height: 16px;
+  gap: 6px;
+}
+
+body.theme-afterhours-poster .total-score-cards {
+  margin-top: 1px;
+}
+
+body.theme-afterhours-poster #game .deck-panel {
+  background: transparent !important;
+  border-color: transparent !important;
+  box-shadow: none !important;
+}
+
+body.theme-afterhours-poster #game .deck-wrap::before {
+  background:
+    radial-gradient(circle at center, rgba(216, 75, 69, 0.12) 0 40%, rgba(216, 75, 69, 0) 40% 100%),
+    radial-gradient(circle at center, rgba(21, 27, 53, 0.12) 0 1.5px, transparent 1.5px 11px) !important;
+  background-size: 100% 100%, 16px 16px !important;
+  opacity: 0.7 !important;
+}
+
+body.theme-afterhours-poster #game .deck-wrap::after {
+  background: repeating-linear-gradient(-45deg, rgba(21, 27, 53, 0.12) 0 3px, transparent 3px 15px) !important;
+  opacity: 0.25 !important;
+}
+
+body.theme-afterhours-poster #game .deck-stack {
+  background:
+    linear-gradient(145deg, var(--poster-ink) 0%, #2b3769 100%) !important;
+  background-image: none !important;
+  border-color: var(--poster-ink) !important;
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.16),
+    4px 5px 0 rgba(21, 27, 53, 0.24),
+    8px 10px 0 rgba(21, 27, 53, 0.12) !important;
+}
+
+body.theme-afterhours-poster #game .deck-stack::before {
+  content: "STREAK";
+  position: absolute;
+  inset: 14px;
+  display: grid;
+  place-items: center;
+  border: 3px solid var(--poster-ink);
+  background:
+    linear-gradient(135deg, transparent 0 28%, var(--poster-hot) 28% 36%, transparent 36% 100%),
+    linear-gradient(225deg, transparent 0 16%, rgba(102, 183, 173, 0.72) 16% 22%, transparent 22% 100%),
+    linear-gradient(165deg, rgba(255, 255, 255, 0.95) 0%, rgba(239, 229, 215, 0.98) 100%);
+  color: var(--poster-ink);
+  font-family: var(--poster-display);
+  font-size: clamp(2.2rem, 8vw, 3.2rem);
+  letter-spacing: 0.02em;
+  line-height: 0.9;
+  text-shadow: 3px 3px 0 rgba(216, 75, 69, 0.16);
+  transform: rotate(-4deg) skewX(-6deg);
+  mix-blend-mode: normal !important;
+  opacity: 1 !important;
+}
+
+body.theme-afterhours-poster #game .deck-stack::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(180deg, transparent 0 10%, rgba(255, 255, 255, 0.08) 10% 12%, transparent 12% 100%),
+    linear-gradient(115deg, transparent 0 64%, rgba(223, 178, 68, 0.8) 64% 70%, transparent 70% 100%);
+  opacity: 0.7 !important;
+  mix-blend-mode: normal !important;
+  transform: none !important;
+}
+
+body.theme-afterhours-poster #game .deck-stack.is-ready:not(.disabled)::after {
+  animation: none !important;
+}
+
+body.theme-afterhours-poster #game .deck-count {
+  background: var(--poster-hot) !important;
+  border-color: var(--poster-ink) !important;
+  box-shadow: var(--poster-shadow-sm) !important;
+  color: #fff8f1 !important;
+  text-shadow: none !important;
+}
+
+body.theme-afterhours-poster #game .hand-panel {
+  background:
+    linear-gradient(180deg, rgba(247, 239, 231, 0.96) 0%, rgba(239, 229, 215, 0.98) 100%),
+    linear-gradient(0deg, rgba(21, 27, 53, 0.05) 0 2px, transparent 2px 18px) !important;
+}
+
+body.theme-afterhours-poster #playerAreaCards:empty::after {
+  content: "TEMPT THE DECK";
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 7px 14px 8px;
+  border: 3px solid var(--poster-ink);
+  background: rgba(255, 255, 255, 0.56);
+  color: var(--poster-ink);
+  font-family: var(--poster-display);
+  font-size: 0.82rem;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  box-shadow: var(--poster-shadow-sm);
+  clip-path: polygon(7% 0, 100% 0, 93% 100%, 0 100%);
+}
+
+body.theme-afterhours-poster #playerAreaSum:not(:empty) {
+  display: inline-flex !important;
+  align-items: center;
+  justify-content: center;
+  padding: 4px 14px 6px;
+  border: 3px solid var(--poster-ink);
+  background: var(--poster-energy);
+  box-shadow: var(--poster-shadow-sm);
+  color: var(--poster-ink);
+  font-family: var(--poster-display);
+  letter-spacing: 0.08em;
+  clip-path: polygon(7% 0, 100% 0, 93% 100%, 0 100%);
+}
+
+body.theme-afterhours-poster #game .actions-panel {
+  background:
+    linear-gradient(180deg, rgba(247, 239, 231, 0.96) 0%, rgba(231, 217, 202, 0.98) 100%),
+    linear-gradient(90deg, rgba(21, 27, 53, 0.05) 0 2px, transparent 2px 16px) !important;
+}
+
+body.theme-afterhours-poster .mini-log {
+  background: rgba(255, 255, 255, 0.68) !important;
+  border-color: rgba(21, 27, 53, 0.46) !important;
+  box-shadow: inset 0 0 0 1px rgba(21, 27, 53, 0.08) !important;
+  color: var(--poster-ink-soft) !important;
+}
+
+body.theme-afterhours-poster .mini-log .entry.is-bust {
+  color: var(--poster-hot-dark) !important;
+}
+
+body.theme-afterhours-poster .mini-log .entry.is-win {
+  color: #6d4f16 !important;
+}
+
+body.theme-afterhours-poster .card-face,
+body.theme-afterhours-poster .fx-fly-card,
+body.theme-afterhours-poster .sidebar-card-preview-card {
+  background-image: none !important;
+  border-color: var(--poster-ink) !important;
+  box-shadow: var(--poster-shadow-sm) !important;
+  text-shadow: none !important;
+  font-family: var(--poster-display) !important;
+}
+
+body.theme-afterhours-poster .card-face.card-number,
+body.theme-afterhours-poster .fx-fly-card.card-number,
+body.theme-afterhours-poster .sidebar-card-preview-card.card-number {
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.44) 0 22%, transparent 22% 100%),
+    linear-gradient(135deg, transparent 0 56%, var(--card-band, var(--poster-hot)) 56% 68%, transparent 68% 100%),
+    linear-gradient(180deg, rgba(21, 27, 53, 0.06) 0 2px, transparent 2px 14px),
+    linear-gradient(145deg, #fcf5ea 0%, #efe5d7 100%) !important;
+  color: var(--poster-ink) !important;
+  -webkit-text-stroke: 0 !important;
+  text-shadow: none !important;
+}
+
+body.theme-afterhours-poster .card-face.card-number::before,
+body.theme-afterhours-poster .fx-fly-card.card-number::before,
+body.theme-afterhours-poster .sidebar-card-preview-card.card-number::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(circle at 22% 20%, rgba(21, 27, 53, 0.12) 0 1.4px, transparent 1.4px 10px),
+    linear-gradient(90deg, transparent 0 18%, rgba(21, 27, 53, 0.08) 18% 20%, transparent 20% 100%);
+  background-size: 15px 15px, 100% 100%;
+}
+
+body.theme-afterhours-poster .card-face.card-number::after,
+body.theme-afterhours-poster .fx-fly-card.card-number::after,
+body.theme-afterhours-poster .sidebar-card-preview-card.card-number::after {
+  content: "RISK";
+  position: absolute;
+  top: 6px;
+  left: 6px;
+  padding: 2px 4px;
+  background: var(--card-band, var(--poster-hot));
+  color: #fff8f1;
+  font-family: var(--poster-display);
+  font-size: 0.38rem;
+  letter-spacing: 0.08em;
+  line-height: 1;
+}
+
+body.theme-afterhours-poster .num-0,
+body.theme-afterhours-poster .num-1,
+body.theme-afterhours-poster .num-2,
+body.theme-afterhours-poster .num-3 {
+  --card-band: var(--poster-hot);
+}
+
+body.theme-afterhours-poster .num-4,
+body.theme-afterhours-poster .num-5,
+body.theme-afterhours-poster .num-6,
+body.theme-afterhours-poster .num-7 {
+  --card-band: var(--poster-cool);
+}
+
+body.theme-afterhours-poster .num-8,
+body.theme-afterhours-poster .num-9,
+body.theme-afterhours-poster .num-10,
+body.theme-afterhours-poster .num-11,
+body.theme-afterhours-poster .num-12 {
+  --card-band: var(--poster-energy);
+}
+
+body.theme-afterhours-poster .card-face.card-modifier,
+body.theme-afterhours-poster .fx-fly-card.card-modifier,
+body.theme-afterhours-poster .sidebar-card-preview-card.card-modifier {
+  background:
+    linear-gradient(135deg, transparent 0 30%, rgba(102, 183, 173, 0.82) 30% 40%, transparent 40% 100%),
+    linear-gradient(145deg, var(--poster-ink) 0%, #2b3769 100%) !important;
+  color: #fff8f1 !important;
+  -webkit-text-stroke: 0 !important;
+}
+
+body.theme-afterhours-poster .card-face.card-modifier::after,
+body.theme-afterhours-poster .fx-fly-card.card-modifier::after,
+body.theme-afterhours-poster .sidebar-card-preview-card.card-modifier::after {
+  content: "BOOST";
+  position: absolute;
+  top: 6px;
+  left: 6px;
+  color: rgba(255, 248, 241, 0.72);
+  font-family: var(--poster-display);
+  font-size: 0.36rem;
+  letter-spacing: 0.08em;
+}
+
+body.theme-afterhours-poster .card-face.card-action,
+body.theme-afterhours-poster .fx-fly-card.card-action,
+body.theme-afterhours-poster .sidebar-card-preview-card.card-action {
+  background:
+    linear-gradient(135deg, transparent 0 26%, rgba(216, 75, 69, 0.82) 26% 36%, transparent 36% 100%),
+    linear-gradient(145deg, #f2d47f 0%, #e2b544 100%) !important;
+  color: var(--poster-ink) !important;
+  -webkit-text-stroke: 0 !important;
+}
+
+body.theme-afterhours-poster .card-face.card-action::after,
+body.theme-afterhours-poster .fx-fly-card.card-action::after,
+body.theme-afterhours-poster .sidebar-card-preview-card.card-action::after {
+  position: absolute;
+  top: 6px;
+  left: 6px;
+  color: rgba(21, 27, 53, 0.72);
+  font-family: var(--poster-display);
+  font-size: 0.36rem;
+  letter-spacing: 0.08em;
+}
+
+body.theme-afterhours-poster .card-face.act-second::after,
+body.theme-afterhours-poster .fx-fly-card.act-second::after,
+body.theme-afterhours-poster .sidebar-card-preview-card.act-second::after {
+  content: "HOLD";
+}
+
+body.theme-afterhours-poster .card-face.act-freeze::after,
+body.theme-afterhours-poster .fx-fly-card.act-freeze::after,
+body.theme-afterhours-poster .sidebar-card-preview-card.act-freeze::after {
+  content: "LOCK";
+}
+
+body.theme-afterhours-poster .card-face.act-flip3::after,
+body.theme-afterhours-poster .fx-fly-card.act-flip3::after,
+body.theme-afterhours-poster .sidebar-card-preview-card.act-flip3::after {
+  content: "DARE";
+}
+
+body.theme-afterhours-poster .card-face.card-duplicate,
+body.theme-afterhours-poster .fx-fly-card.card-duplicate {
+  border-color: var(--poster-hot-dark) !important;
+  background:
+    linear-gradient(135deg, transparent 0 52%, rgba(216, 75, 69, 0.88) 52% 66%, transparent 66% 100%),
+    linear-gradient(145deg, #f5ddd8 0%, #efc4bf 100%) !important;
+}
+
+body.theme-afterhours-poster .score-burst,
+body.theme-afterhours-poster .sum-burst,
+body.theme-afterhours-poster .scoreboard-player .score-float {
+  background: var(--poster-energy) !important;
+  border-color: var(--poster-ink) !important;
+  box-shadow: var(--poster-shadow-sm) !important;
+  color: var(--poster-ink) !important;
+  font-family: var(--poster-display) !important;
+}
+
+body.theme-afterhours-poster .score-burst .score-burst-word {
+  letter-spacing: 0.12em !important;
+}
+
+body.theme-afterhours-poster .event-toast {
+  background: var(--poster-hot) !important;
+  border-color: var(--poster-ink) !important;
+  box-shadow: var(--poster-shadow) !important;
+  color: #fff8f1 !important;
+  font-family: var(--poster-display) !important;
+  letter-spacing: 0.08em !important;
+}
+
+body.theme-afterhours-poster .event-toast::after {
+  background: var(--poster-hot) !important;
+  border-color: var(--poster-ink) !important;
+}
+
+body.theme-afterhours-poster .event-toast.toast-bust {
+  background: var(--poster-hot-dark) !important;
+}
+
+body.theme-afterhours-poster .event-toast.toast-stop,
+body.theme-afterhours-poster .event-toast.toast-win {
+  background: var(--poster-cool) !important;
+  color: var(--poster-ink) !important;
+}
+
+body.theme-afterhours-poster .round-overlay {
+  background: rgba(21, 27, 53, 0.18) !important;
+}
+
+body.theme-afterhours-poster .round-overlay span {
+  background: var(--poster-energy) !important;
+  border-color: var(--poster-ink) !important;
+  box-shadow: var(--poster-shadow) !important;
+  color: var(--poster-ink) !important;
+  font-family: var(--poster-display) !important;
+}
+
+body.theme-afterhours-poster .sidebar-card-preview {
+  background: rgba(247, 239, 231, 0.98) !important;
+  border-color: var(--poster-ink) !important;
+  box-shadow: var(--poster-shadow) !important;
+}
+
+body.theme-afterhours-poster .fx-new {
+  animation: afterhours-card-slam 0.22s steps(6, end) both !important;
+}
+
+body.theme-afterhours-poster .fx-fly-card {
+  animation: afterhours-fly 0.28s cubic-bezier(0.2, 1, 0.26, 1) both !important;
+}
+
+body.theme-afterhours-poster .fx-deck-draw,
+body.theme-afterhours-poster .fx-stop-bank,
+body.theme-afterhours-poster .fx-score-pop,
+body.theme-afterhours-poster .fx-sum-pop,
+body.theme-afterhours-poster .fx-panel-toggle {
+  animation: afterhours-pop 0.2s steps(5, end) both !important;
+}
+
+body.theme-afterhours-poster .fx-bust,
+body.theme-afterhours-poster .fx-deck-empty {
+  animation: afterhours-shudder 0.26s steps(6, end) both !important;
+}
+
+body.theme-afterhours-poster .event-toast.is-show {
+  animation: afterhours-toast 0.66s steps(8, end) forwards !important;
+}
+
+body.theme-afterhours-poster .round-overlay.is-show {
+  animation: afterhours-overlay 0.48s steps(6, end) forwards !important;
+}
+
+@keyframes afterhours-card-slam {
+  0% { transform: translateY(-18px) rotate(-10deg) scale(0.86); }
+  60% { transform: translateY(3px) rotate(2deg) scale(1.03); }
+  100% { transform: translateY(0) rotate(0) scale(1); }
+}
+
+@keyframes afterhours-fly {
+  0% { opacity: 0.3; transform: translate3d(0, 0, 0) rotate(-18deg) scale(0.78); }
+  60% { opacity: 1; transform: translate3d(0, -10px, 0) rotate(4deg) scale(1.02); }
+  100% { opacity: 1; transform: translate3d(0, 0, 0) rotate(0) scale(1); }
+}
+
+@keyframes afterhours-pop {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.06) rotate(-1deg); }
+  100% { transform: scale(1); }
+}
+
+@keyframes afterhours-shudder {
+  0% { transform: translateX(0); }
+  20% { transform: translateX(-6px); }
+  40% { transform: translateX(6px); }
+  60% { transform: translateX(-4px); }
+  100% { transform: translateX(0); }
+}
+
+@keyframes afterhours-toast {
+  0% { opacity: 0; transform: translateX(-50%) translateY(-10px) scale(0.82); }
+  18% { opacity: 1; transform: translateX(-50%) translateY(0) scale(1); }
+  82% { opacity: 1; transform: translateX(-50%) translateY(0) scale(1); }
+  100% { opacity: 0; transform: translateX(-50%) translateY(-4px) scale(0.96); }
+}
+
+@keyframes afterhours-overlay {
+  0% { opacity: 0; }
+  25% { opacity: 1; }
+  100% { opacity: 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  body.theme-afterhours-poster *,
+  body.theme-afterhours-poster *::before,
+  body.theme-afterhours-poster *::after {
+    animation-duration: 1ms !important;
+    transition-duration: 1ms !important;
+  }
+}

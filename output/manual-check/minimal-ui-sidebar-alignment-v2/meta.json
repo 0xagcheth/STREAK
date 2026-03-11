@@ -1,0 +1,36 @@
+{
+  "collapsed": {
+    "row": {
+      "x": 426,
+      "y": 30,
+      "width": 40,
+      "height": 53
+    },
+    "avatar": {
+      "x": 426,
+      "y": 32,
+      "width": 40,
+      "height": 40
+    }
+  },
+  "expanded": {
+    "row": {
+      "x": 424,
+      "y": 30,
+      "width": 122,
+      "height": 42
+    },
+    "avatar": {
+      "x": 424,
+      "y": 30,
+      "width": 32,
+      "height": 32
+    },
+    "name": {
+      "x": 464,
+      "y": 32.453125,
+      "width": 41,
+      "height": 13.09375
+    }
+  }
+}
