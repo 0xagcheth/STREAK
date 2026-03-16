@@ -219,6 +219,25 @@ Original prompt: анимация. добавь больше анимация и
     - `output/manual-check/scoreboard-top-left-collapsed-v1.png`
     - `output/manual-check/scoreboard-top-left-expanded-v1.png`
 
+- 2026-03-13 mobile-first portrait refresh:
+  - Added a new portrait scene asset: `assets/backgrounds/main-stage-background-portrait.svg`.
+  - Switched the underground-comic theme background from the old landscape image to the new portrait composition.
+  - Tuned the theme for mobile browser play:
+    - smaller phone-first card geometry,
+    - narrower/tighter scoreboard sizing,
+    - stabilized deck position when the sidebar expands,
+    - reduced panel paddings for portrait screens,
+    - tightened target picker and action button layout,
+    - improved very narrow screen stacking so the deck leads the screen.
+  - Verification:
+    - Skill Playwright smoke check after `#btnStart`:
+      - `output/manual-check/portrait-skill/shot-0.png`
+    - Explicit phone viewport captures (`390x844`):
+      - `output/manual-check/mobile-portrait-check/start-mobile.png`
+      - `output/manual-check/mobile-portrait-check/game-mobile.png`
+      - `output/manual-check/mobile-portrait-check/game-mobile-score-expanded.png`
+    - No captured console/page error artifacts were produced during these checks.
+
 - Sidebar-only request: in collapsed mode avatars must align parallel to player blocks in expanded mode.
   - Added shared row height variable (`--scoreboard-row-h: 48px`).
   - Applied same row height for both states:
@@ -1099,3 +1118,43 @@ Original prompt: анимация. добавь больше анимация и
     - asset preview checked directly from `assets/background/streak-bg-calm.png`
     - start screen: `output/manual-check/background-calm-wide-start-v1/shot-0.png`
     - game screen: `output/manual-check/background-calm-wide-game-v1/shot-0.png`
+- 2026-03-13 cleanup pass without logic changes:
+  - Removed dead JS/CSS pieces that were no longer used:
+    `escapeHtml`, `showRoundOverlay`, stale `currentStatus`/`playersEdges` hooks, and an unused `activeAnimations` state field.
+  - Simplified `src/app-main.js` startup/reset flow:
+    removed the trivial `getHumanCount()` wrapper, added `resetUiAnimState()`, and normalized file formatting without changing turn logic.
+  - Cleaned the project tree from non-runtime artifacts:
+    deleted `output/`, `assets/demo/`, `.DS_Store` files, the unused `theme-afterhours-poster.css`, the empty `package-lock.json`, and unused legacy art assets no longer referenced by HTML/CSS/JS.
+  - Added `.gitignore` for recurring generated clutter:
+    `.DS_Store`, `output/`, `assets/demo/`.
+  - Verification:
+    - `node --check src/app-core.js`
+    - `node --check src/app-ui.js`
+    - `node --check src/app-main.js`
+    - Playwright smoke-check after cleanup:
+      `output/manual-check/cleanup-smoke/shot-0.png`
+- 2026-03-13 project structure rename / navigation pass:
+  - Renamed runtime code to clearer entry points:
+    - `src/app-core.js` -> `src/game-logic.js`
+    - `src/app-ui.js` -> `src/game-ui.js`
+    - `src/app-main.js` -> `src/game-bootstrap.js`
+  - Moved styles into dedicated folders:
+    - `styles.css` -> `styles/base.css`
+    - `theme-underground-comic.css` -> `styles/themes/underground-comic.css`
+  - Normalized asset layout for easier scanning:
+    - background -> `assets/backgrounds/main-stage-background.*`
+    - deck back -> `assets/cards/back/deck-back.png`
+    - shared SVG patterns -> `assets/patterns/`
+    - clearer action-card filenames (`second-chance.svg`, `flip-three.svg`, `generic-action.svg`)
+  - Moved planning/reference materials out of the app root into `docs/`:
+    - `docs/project-board.canvas`
+    - `docs/planning/*`
+  - Deleted empty leftovers after the move:
+    - old `planning/`, old `assets/background/`, regenerated `output/`
+  - Updated all runtime references in `index.html`, CSS, and doc canvases to match the new structure.
+  - Verification:
+    - `node --check src/game-logic.js`
+    - `node --check src/game-ui.js`
+    - `node --check src/game-bootstrap.js`
+    - Playwright smoke-check after renaming:
+      `/tmp/streak-structure-check/shot-0.png`
