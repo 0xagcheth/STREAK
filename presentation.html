@@ -1100,6 +1100,298 @@ p{font-size:clamp(12px,1.3vw,15px);color:var(--m);line-height:1.65;}
   </div>
 </div>
 
+<!-- ══════════════ 20b · ГЕЙМПЛЕЙ АНИМАЦИЯ ══════════════ -->
+<div class="slide">
+  <div class="col fw" style="align-items:center;">
+    <div class="badge bb"><span class="ru">Геймплей</span><span class="en">Gameplay preview</span></div>
+    <h2 style="text-align:center;margin-bottom:18px;"><span class="ru">Как выглядит раунд</span><span class="en">How a round looks</span></h2>
+    <div style="display:flex;gap:32px;align-items:flex-start;width:100%;justify-content:center;">
+      <!-- анимированная карта -->
+      <div style="flex-shrink:0;">
+        <canvas id="battleCanvas" width="420" height="380" style="border-radius:16px;background:#0d0d18;display:block;"></canvas>
+      </div>
+      <!-- лог событий -->
+      <div style="display:flex;flex-direction:column;gap:10px;min-width:220px;max-width:260px;">
+        <div class="card" style="padding:14px 16px;">
+          <div style="font-size:11px;color:var(--m);margin-bottom:8px;letter-spacing:1px;text-transform:uppercase;"><span class="ru">Раунд</span><span class="en">Round</span> <span id="battleRound">1</span> / 28</div>
+          <div id="battleCard" style="font-size:16px;font-weight:800;color:var(--p);">EXPAND</div>
+          <div id="battleCardDesc" style="font-size:11px;color:var(--m);margin-top:4px;"><span class="ru">DAO голосует за расширение</span><span class="en">DAO votes to expand</span></div>
+        </div>
+        <div class="card" style="padding:14px 16px;flex:1;overflow:hidden;">
+          <div style="font-size:11px;color:var(--m);margin-bottom:8px;letter-spacing:1px;text-transform:uppercase;"><span class="ru">События</span><span class="en">Events</span></div>
+          <div id="battleLog" style="font-size:11px;line-height:1.7;color:var(--t);max-height:180px;overflow:hidden;"></div>
+        </div>
+        <div style="display:flex;gap:8px;">
+          <div class="card" style="padding:10px 12px;flex:1;text-align:center;">
+            <div style="font-size:10px;color:var(--r);margin-bottom:2px;">Team A</div>
+            <div id="scoreA" style="font-size:20px;font-weight:900;color:var(--r);">0</div>
+          </div>
+          <div class="card" style="padding:10px 12px;flex:1;text-align:center;">
+            <div style="font-size:10px;color:var(--p);margin-bottom:2px;">Team B</div>
+            <div id="scoreB" style="font-size:20px;font-weight:900;color:var(--p);">0</div>
+          </div>
+          <div class="card" style="padding:10px 12px;flex:1;text-align:center;">
+            <div style="font-size:10px;color:var(--g);margin-bottom:2px;">Bot C</div>
+            <div id="scoreC" style="font-size:20px;font-weight:900;color:var(--g);">0</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+(function(){
+  const COLS=7,ROWS=7;
+  const TEAM={N:0,A:1,B:2,C:3};
+  const COLORS={0:'#1e1e2e',1:'#ff4d6d',2:'#6c63ff',3:'#00d4aa'};
+  const COLORS_DIM={0:'#1e1e2e',1:'rgba(255,77,109,0.35)',2:'rgba(108,99,255,0.35)',3:'rgba(0,212,170,0.35)'};
+  const HQ={A:[0,0],B:[6,6],C:[3,6]};
+  const CARDS=[
+    {name:'EXPAND',      desc_ru:'Расширение территории',  desc_en:'Territorial expansion'},
+    {name:'ATTACK',      desc_ru:'Массовая атака фронта',  desc_en:'Mass front attack'},
+    {name:'FORTIFY',     desc_ru:'Укрепление периметра',   desc_en:'Fortify the border'},
+    {name:'GROW',        desc_ru:'Экономический рост',     desc_en:'Economic growth'},
+    {name:'SIEGE',       desc_ru:'Штурм вражеских башен',  desc_en:'Siege enemy towers'},
+    {name:'SHIELD WALL', desc_ru:'Полная защита (редкая)', desc_en:'Full defense (rare)'},
+  ];
+
+  let grid=[], round=1, logLines=[], animTimeout=null;
+  const canvas=document.getElementById('battleCanvas');
+  if(!canvas) return;
+  const ctx=canvas.getContext('2d');
+
+  // init grid
+  function initGrid(){
+    grid=[];
+    for(let r=0;r<ROWS;r++){grid[r]=[];for(let c=0;c<COLS;c++)grid[r][c]=TEAM.N;}
+    // starting positions
+    grid[0][0]=TEAM.A; grid[0][1]=TEAM.A; grid[1][0]=TEAM.A;
+    grid[6][6]=TEAM.B; grid[6][5]=TEAM.B; grid[5][6]=TEAM.B;
+    grid[6][3]=TEAM.C; grid[5][3]=TEAM.C; grid[6][4]=TEAM.C;
+  }
+
+  function hexCenter(col,row){
+    const size=26, offX=34, offY=26;
+    const x = offX + col*(size*1.75) + (row%2)*(size*0.875);
+    const y = offY + row*(size*1.52);
+    return [x,y];
+  }
+
+  function drawHex(cx,cy,size,fill,stroke,label,pulse){
+    ctx.beginPath();
+    for(let i=0;i<6;i++){
+      const a=Math.PI/180*(60*i-30);
+      const x=cx+size*Math.cos(a), y=cy+size*Math.sin(a);
+      i===0?ctx.moveTo(x,y):ctx.lineTo(x,y);
+    }
+    ctx.closePath();
+    ctx.fillStyle=fill;
+    ctx.fill();
+    if(pulse){
+      ctx.strokeStyle='rgba(255,255,255,0.7)';
+      ctx.lineWidth=2.5;
+    } else {
+      ctx.strokeStyle=stroke||'rgba(255,255,255,0.06)';
+      ctx.lineWidth=1;
+    }
+    ctx.stroke();
+    if(label){
+      ctx.fillStyle='rgba(255,255,255,0.55)';
+      ctx.font='bold 8px sans-serif';
+      ctx.textAlign='center';
+      ctx.textBaseline='middle';
+      ctx.fillText(label,cx,cy);
+    }
+  }
+
+  let pulseSet=new Set();
+  function drawBoard(){
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+    for(let r=0;r<ROWS;r++){
+      for(let c=0;c<COLS;c++){
+        const t=grid[r][c];
+        const [cx,cy]=hexCenter(c,r);
+        const key=r+','+c;
+        const isPulse=pulseSet.has(key);
+        const isHQ=(HQ.A[0]===c&&HQ.A[1]===r)||(HQ.B[0]===c&&HQ.B[1]===r)||(HQ.C[0]===c&&HQ.C[1]===r);
+        const fill= isPulse ? COLORS[t] : (t===TEAM.N ? '#1a1a2e' : COLORS_DIM[t]);
+        drawHex(cx,cy,22,fill,COLORS[t],isHQ?'HQ':null,isPulse);
+      }
+    }
+  }
+
+  function getNeighbors(r,c){
+    const even=r%2===0;
+    const dirs=even
+      ?[[-1,-1],[-1,0],[0,-1],[0,1],[1,-1],[1,0]]
+      :[[-1,0],[-1,1],[0,-1],[0,1],[1,0],[1,1]];
+    return dirs.map(([dr,dc])=>[r+dr,c+dc]).filter(([nr,nc])=>nr>=0&&nr<ROWS&&nc>=0&&nc<COLS);
+  }
+
+  function getCells(team){return grid.flatMap((row,r)=>row.map((t,c)=>t===team?[r,c]:null).filter(Boolean));}
+  function getFrontier(team){
+    const cells=getCells(team);
+    const frontier=[];
+    for(const [r,c] of cells){
+      for(const [nr,nc] of getNeighbors(r,c)){
+        if(grid[nr][nc]!==team) frontier.push([nr,nc,r,c]);
+      }
+    }
+    return frontier;
+  }
+
+  function addLog(txt){
+    logLines.unshift(txt);
+    if(logLines.length>8)logLines.pop();
+    const el=document.getElementById('battleLog');
+    if(el)el.innerHTML=logLines.map(l=>`<div>${l}</div>`).join('');
+  }
+
+  function updateScores(){
+    const s={[TEAM.A]:0,[TEAM.B]:0,[TEAM.C]:0};
+    for(let r=0;r<ROWS;r++)for(let c=0;c<COLS;c++)if(grid[r][c]!==TEAM.N)s[grid[r][c]]++;
+    document.getElementById('scoreA').textContent=s[TEAM.A]||0;
+    document.getElementById('scoreB').textContent=s[TEAM.B]||0;
+    document.getElementById('scoreC').textContent=s[TEAM.C]||0;
+  }
+
+  // каждой команде — своя стратегия
+  const STRATEGY={
+    [TEAM.A]:'aggressive',  // Team A — агрессор, любит атаковать
+    [TEAM.B]:'economic',    // Team B — экономист, сначала растёт
+    [TEAM.C]:'random',      // Bot C — непредсказуемый
+  };
+
+  function pickCard(team){
+    const myCells=getCells(team).length;
+    const frontier=getFrontier(team);
+    const enemyFront=frontier.filter(([r,c])=>grid[r][c]!==TEAM.N&&grid[r][c]!==team).length;
+    const neutralFront=frontier.filter(([r,c])=>grid[r][c]===TEAM.N).length;
+    const strat=STRATEGY[team];
+
+    if(strat==='aggressive'){
+      if(myCells<4) return CARDS[0]; // EXPAND — сначала вырасти
+      if(enemyFront>0 && Math.random()<0.6) return CARDS[1]; // ATTACK
+      if(Math.random()<0.3) return CARDS[2]; // FORTIFY
+      return CARDS[0]; // EXPAND
+    }
+    if(strat==='economic'){
+      if(myCells<7) return CARDS[3]; // GROW
+      if(neutralFront>1 && Math.random()<0.5) return CARDS[0]; // EXPAND
+      if(enemyFront>0 && Math.random()<0.35) return CARDS[4]; // SIEGE
+      return CARDS[3]; // GROW
+    }
+    // random bot — все карты включая редкую SHIELD WALL
+    const weights=[0.24,0.20,0.15,0.20,0.16,0.05]; // EXPAND,ATTACK,FORTIFY,GROW,SIEGE,SHIELD WALL
+    const r=Math.random();
+    let acc=0;
+    for(let i=0;i<CARDS.length;i++){acc+=weights[i];if(r<acc)return CARDS[i];}
+    return CARDS[0];
+  }
+
+  function executeCard(team,card){
+    const frontier=getFrontier(team);
+    if(!frontier.length)return[];
+    const changed=[];
+    const isEnglish=document.body.classList.contains('en');
+    const tName=team===TEAM.A?'Team A':team===TEAM.B?'Team B':'Bot C';
+    const tColor=team===TEAM.A?'#ff4d6d':team===TEAM.B?'#8b80ff':'#00d4aa';
+    const colored=`<span style="color:${tColor};font-weight:700;">${tName}</span>`;
+
+    if(card.name==='EXPAND'){
+      const neutral=frontier.filter(([r,c])=>grid[r][c]===TEAM.N);
+      const picks=neutral.sort(()=>Math.random()-0.5).slice(0,2+Math.floor(Math.random()*2));
+      for(const [r,c] of picks){grid[r][c]=team;changed.push(r+','+c);}
+      if(picks.length)addLog(`${colored} ${isEnglish?'expands':'расширяется'} 🗺️ +${picks.length}`);
+      else addLog(`${colored} ${isEnglish?'no neutral cells':'нет нейтральных'}`);
+    } else if(card.name==='GROW'){
+      const neutral=frontier.filter(([r,c])=>grid[r][c]===TEAM.N);
+      const picks=neutral.sort(()=>Math.random()-0.5).slice(0,3);
+      for(const [r,c] of picks){grid[r][c]=team;changed.push(r+','+c);}
+      if(picks.length)addLog(`${colored} ${isEnglish?'grows economy':'экономика'} 🌾 +${picks.length}`);
+    } else if(card.name==='ATTACK'){
+      const enemy=frontier.filter(([r,c])=>grid[r][c]!==TEAM.N&&grid[r][c]!==team);
+      const picks=enemy.sort(()=>Math.random()-0.5).slice(0,1+Math.floor(Math.random()*2));
+      for(const [r,c] of picks){grid[r][c]=team;changed.push(r+','+c);}
+      if(picks.length)addLog(`${colored} ${isEnglish?'attacks':'атакует'} ⚔️ ×${picks.length}`);
+      else addLog(`${colored} ${isEnglish?'no targets':'нет врагов рядом'}`);
+    } else if(card.name==='FORTIFY'){
+      // FORTIFY: только нейтральные — укрепляем периметр, не атакуем
+      const neutral=frontier.filter(([r,c])=>grid[r][c]===TEAM.N);
+      const picks=neutral.sort(()=>Math.random()-0.5).slice(0,3);
+      for(const [r,c] of picks){grid[r][c]=team;changed.push(r+','+c);}
+      addLog(`${colored} ${isEnglish?'fortifies border':'укрепляет границу'} 🛡️ +${picks.length}`);
+    } else if(card.name==='SIEGE'){
+      // SIEGE: захватывает только вражеские (не нейтральные) клетки
+      const enemy=frontier.filter(([r,c])=>grid[r][c]!==TEAM.N&&grid[r][c]!==team);
+      const picks=enemy.sort(()=>Math.random()-0.5).slice(0,2);
+      for(const [r,c] of picks){grid[r][c]=team;changed.push(r+','+c);}
+      if(picks.length)addLog(`${colored} ${isEnglish?'sieges towers':'штурмует башни'} 🏰 ×${picks.length}`);
+      else addLog(`${colored} ${isEnglish?'siege — no targets':'цели не найдены'}`);
+    } else if(card.name==='SHIELD WALL'){
+      // SHIELD WALL: редкая карта — иммунитет, ничего не захватывает
+      addLog(`${colored} ${isEnglish?'SHIELD WALL — immune!':'SHIELD WALL — иммунитет!'} 🔰`);
+    } else {
+      const neutral=frontier.filter(([r,c])=>grid[r][c]===TEAM.N);
+      const picks=neutral.sort(()=>Math.random()-0.5).slice(0,2);
+      for(const [r,c] of picks){grid[r][c]=team;changed.push(r+','+c);}
+    }
+    return changed;
+  }
+
+  function doRound(){
+    if(round>28){round=1;initGrid();logLines=[];}
+    const isEnglish=document.body.classList.contains('en');
+
+    // каждая команда выбирает свою карту независимо
+    const cardA=pickCard(TEAM.A);
+    const cardB=pickCard(TEAM.B);
+    const cardC=pickCard(TEAM.C);
+
+    document.getElementById('battleRound').textContent=round;
+    document.getElementById('battleCard').innerHTML=
+      `<span style="color:#ff4d6d">A: ${cardA.name}</span> &nbsp;`+
+      `<span style="color:#8b80ff">B: ${cardB.name}</span> &nbsp;`+
+      `<span style="color:#00d4aa">C: ${cardC.name}</span>`;
+    document.getElementById('battleCardDesc').textContent=
+      isEnglish?'Each DAO votes — cards resolve simultaneously':'Каждое DAO голосует — карты применяются одновременно';
+
+    pulseSet=new Set();
+    const changed=[];
+    changed.push(...executeCard(TEAM.A,cardA));
+    changed.push(...executeCard(TEAM.B,cardB));
+    changed.push(...executeCard(TEAM.C,cardC));
+    pulseSet=new Set(changed);
+    drawBoard();
+    updateScores();
+    setTimeout(()=>{pulseSet=new Set();drawBoard();},700);
+    round++;
+    animTimeout=setTimeout(doRound,2000);
+  }
+
+  // start when slide becomes active
+  function checkAndStart(){
+    const slides=document.querySelectorAll('.slide');
+    let targetSlide=null;
+    slides.forEach(s=>{if(s.contains(canvas))targetSlide=s;});
+    if(!targetSlide)return;
+    const observer=new MutationObserver(()=>{
+      if(targetSlide.classList.contains('active')){
+        if(!animTimeout){initGrid();logLines=[];round=1;doRound();}
+      } else {
+        if(animTimeout){clearTimeout(animTimeout);animTimeout=null;}
+      }
+    });
+    observer.observe(targetSlide,{attributes:true,attributeFilter:['class']});
+  }
+
+  initGrid();
+  drawBoard();
+  checkAndStart();
+})();
+</script>
+
 <!-- ══════════════ 21 · ФИНАЛ ══════════════ -->
 <div class="slide bg-e">
   <div class="col ctr" style="max-width:820px;align-items:center;">
